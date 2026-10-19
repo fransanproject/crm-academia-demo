@@ -86,7 +86,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div>
-        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v17</span></div>
+        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v18</span></div>
         <div class="text-[11px] text-slate-400 mt-0.5">Online Centro de Aprendizaje</div>
       </div>
     </div>
@@ -111,7 +111,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div class="flex-1">
-        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v17</span></div>
+        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v18</span></div>
         <div class="text-[10px] text-slate-400">DEMO · datos de ejemplo</div>
       </div>
       <span class="chip bg-amber-100 text-amber-700 border border-amber-200">DEMO</span>
@@ -128,6 +128,10 @@
           <span class="chip bg-amber-100 text-amber-700 border border-amber-200 hidden md:inline-block">DEMO · datos ficticios</span>
         </div>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6" id="kpis"></div>
+        <div class="card p-5 mb-4">
+          <h2 class="font-bold text-slate-900 mb-3">Notificaciones de hoy</h2>
+          <div id="notifs" class="space-y-3"></div>
+        </div>
         <div class="grid lg:grid-cols-3 gap-4">
           <div class="card p-5 lg:col-span-2">
             <div class="flex items-center justify-between mb-4">
@@ -463,35 +467,35 @@ const CLASSES = [
   { id:'c6', group:'g6', days:[5],    start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Carlos Ruiz' },
 ];
 const STUDENTS = [
-  { id:'s01', name:'Marcos Vidal', tutor:'Elena Vidal', rel:'madre', phone:'612345678', cls:'c3', notes:'Examen de física el 24 de octubre. Traer calculadora.' },
-  { id:'s02', name:'Lucía Ferrer', tutor:'Jorge Ferrer', rel:'padre', phone:'623456789', cls:'c4', notes:'' },
-  { id:'s03', name:'Hugo Serrano', tutor:'Marta Serrano', rel:'madre', phone:'634567890', cls:'c1', notes:'Examen de matemáticas el viernes 23.' },
-  { id:'s04', name:'Aitana Ruiz', tutor:'Pablo Ruiz', rel:'padre', phone:'645678901', cls:'c2', notes:'' },
-  { id:'s05', name:'Leo Martín', tutor:'Sara Martín', rel:'madre', phone:'656789012', cls:'c1', notes:'' },
-  { id:'s06', name:'Valeria Gil', tutor:'Iván Gil', rel:'padre', phone:'667890123', cls:'c5', notes:'' },
-  { id:'s07', name:'Diego Torres', tutor:'Laura Torres', rel:'madre', phone:'678901234', cls:'c3', notes:'Alergia a frutos secos.' },
-  { id:'s08', name:'Carla Navarro', tutor:'David Navarro', rel:'padre', phone:'689012345', cls:'c6', notes:'' },
-  { id:'s09', name:'Pablo Jiménez', tutor:'Ana Jiménez', rel:'madre', phone:'699123456', cls:'c2', notes:'' },
-  { id:'s10', name:'Sara Moreno', tutor:'Raúl Moreno', rel:'padre', phone:'600234567', cls:'c4', notes:'' },
-  { id:'s11', name:'Iván Castro', tutor:'Nuria Castro', rel:'madre', phone:'611345678', cls:'c1', notes:'' },
-  { id:'s12', name:'Marta López', tutor:'Sergio López', rel:'padre', phone:'622456789', cls:'c5', notes:'' },
-  { id:'s13', name:'Jorge Díaz', tutor:'Paula Díaz', rel:'madre', phone:'633567890', cls:'c3', notes:'' },
-  { id:'s14', name:'Elena Sánchez', tutor:'Mario Sánchez', rel:'padre', phone:'644678901', cls:'c2', notes:'' },
-  { id:'s15', name:'Adrián Pérez', tutor:'Lucía Pérez', rel:'madre', phone:'655789012', cls:'c6', notes:'' },
-  { id:'s16', name:'Nora Álvarez', tutor:'Hugo Álvarez', rel:'padre', phone:'666890123', cls:'c1', notes:'' },
-  { id:'s17', name:'Álex Romero', tutor:'Carmen Romero', rel:'madre', phone:'677901234', cls:'c1', notes:'' },
-  { id:'s18', name:'Julia Hernández', tutor:'Diego Hernández', rel:'padre', phone:'688012345', cls:'c1', notes:'' },
-  { id:'s19', name:'Mario Gutiérrez', tutor:'Irene Gutiérrez', rel:'madre', phone:'699123457', cls:'c1', notes:'' },
-  { id:'s20', name:'Emma Fernández', tutor:'Luis Fernández', rel:'padre', phone:'610345678', cls:'c2', notes:'' },
-  { id:'s21', name:'Liam García', tutor:'Marta García', rel:'madre', phone:'621456789', cls:'c2', notes:'' },
-  { id:'s22', name:'Oliver Martínez', tutor:'Rubén Martínez', rel:'padre', phone:'632567890', cls:'c3', notes:'' },
-  { id:'s23', name:'Noa Rodríguez', tutor:'Silvia Rodríguez', rel:'madre', phone:'643678901', cls:'c3', notes:'' },
-  { id:'s24', name:'Eric Vidal', tutor:'Andrés Vidal', rel:'padre', phone:'654789012', cls:'c3', notes:'' },
-  { id:'s25', name:'Aitor Beltrán', tutor:'Olga Beltrán', rel:'madre', phone:'665890123', cls:'c4', notes:'' },
-  { id:'s26', name:'Vega Campos', tutor:'Mario Campos', rel:'padre', phone:'676901234', cls:'c4', notes:'' },
-  { id:'s27', name:'Izan Flores', tutor:'Eva Flores', rel:'madre', phone:'687012345', cls:'c5', notes:'' },
-  { id:'s28', name:'Laia Puig', tutor:'Joan Puig', rel:'padre', phone:'698123456', cls:'c5', notes:'' },
-  { id:'s29', name:'Bruno Sanz', tutor:'Marta Sanz', rel:'madre', phone:'609234567', cls:'c6', notes:'' },
+  { id:'s01', name:'Marcos Vidal', tutor:'Elena Vidal', rel:'madre', phone:'612345678', cls:'c3', notes:'Examen de física el 24 de octubre. Traer calculadora.' , birth:'2010-01-01'},
+  { id:'s02', name:'Lucía Ferrer', tutor:'Jorge Ferrer', rel:'padre', phone:'623456789', cls:'c4', notes:'' , birth:'2012-02-14'},
+  { id:'s03', name:'Hugo Serrano', tutor:'Marta Serrano', rel:'madre', phone:'634567890', cls:'c1', notes:'Examen de matemáticas el viernes 23.' , birth:'2013-10-19'},
+  { id:'s04', name:'Aitana Ruiz', tutor:'Pablo Ruiz', rel:'padre', phone:'645678901', cls:'c2', notes:'' , birth:'2018-10-19'},
+  { id:'s05', name:'Leo Martín', tutor:'Sara Martín', rel:'madre', phone:'656789012', cls:'c1', notes:'' , birth:'2012-05-25'},
+  { id:'s06', name:'Valeria Gil', tutor:'Iván Gil', rel:'padre', phone:'667890123', cls:'c5', notes:'' , birth:'2008-06-10'},
+  { id:'s07', name:'Diego Torres', tutor:'Laura Torres', rel:'madre', phone:'678901234', cls:'c3', notes:'Alergia a frutos secos.' , birth:'2010-07-23'},
+  { id:'s08', name:'Carla Navarro', tutor:'David Navarro', rel:'padre', phone:'689012345', cls:'c6', notes:'' , birth:'2017-08-08'},
+  { id:'s09', name:'Pablo Jiménez', tutor:'Ana Jiménez', rel:'madre', phone:'699123456', cls:'c2', notes:'' , birth:'2016-09-21'},
+  { id:'s10', name:'Sara Moreno', tutor:'Raúl Moreno', rel:'padre', phone:'600234567', cls:'c4', notes:'' , birth:'2013-10-06'},
+  { id:'s11', name:'Iván Castro', tutor:'Nuria Castro', rel:'madre', phone:'611345678', cls:'c1', notes:'' , birth:'2012-11-19'},
+  { id:'s12', name:'Marta López', tutor:'Sergio López', rel:'padre', phone:'622456789', cls:'c5', notes:'' , birth:'2008-12-04'},
+  { id:'s13', name:'Jorge Díaz', tutor:'Paula Díaz', rel:'madre', phone:'633567890', cls:'c3', notes:'' , birth:'2010-01-17'},
+  { id:'s14', name:'Elena Sánchez', tutor:'Mario Sánchez', rel:'padre', phone:'644678901', cls:'c2', notes:'' , birth:'2017-02-02'},
+  { id:'s15', name:'Adrián Pérez', tutor:'Lucía Pérez', rel:'madre', phone:'655789012', cls:'c6', notes:'' , birth:'2016-03-15'},
+  { id:'s16', name:'Nora Álvarez', tutor:'Hugo Álvarez', rel:'padre', phone:'666890123', cls:'c1', notes:'' , birth:'2013-04-28'},
+  { id:'s17', name:'Álex Romero', tutor:'Carmen Romero', rel:'madre', phone:'677901234', cls:'c1', notes:'' , birth:'2012-05-13'},
+  { id:'s18', name:'Julia Hernández', tutor:'Diego Hernández', rel:'padre', phone:'688012345', cls:'c1', notes:'' , birth:'2011-06-26'},
+  { id:'s19', name:'Mario Gutiérrez', tutor:'Irene Gutiérrez', rel:'madre', phone:'699123457', cls:'c1', notes:'' , birth:'2013-07-11'},
+  { id:'s20', name:'Emma Fernández', tutor:'Luis Fernández', rel:'padre', phone:'610345678', cls:'c2', notes:'' , birth:'2017-08-24'},
+  { id:'s21', name:'Liam García', tutor:'Marta García', rel:'madre', phone:'621456789', cls:'c2', notes:'' , birth:'2016-09-09'},
+  { id:'s22', name:'Oliver Martínez', tutor:'Rubén Martínez', rel:'padre', phone:'632567890', cls:'c3', notes:'' , birth:'2010-10-22'},
+  { id:'s23', name:'Noa Rodríguez', tutor:'Silvia Rodríguez', rel:'madre', phone:'643678901', cls:'c3', notes:'' , birth:'2009-11-07'},
+  { id:'s24', name:'Eric Vidal', tutor:'Andrés Vidal', rel:'padre', phone:'654789012', cls:'c3', notes:'' , birth:'2008-12-20'},
+  { id:'s25', name:'Aitor Beltrán', tutor:'Olga Beltrán', rel:'madre', phone:'665890123', cls:'c4', notes:'' , birth:'2013-01-05'},
+  { id:'s26', name:'Vega Campos', tutor:'Mario Campos', rel:'padre', phone:'676901234', cls:'c4', notes:'' , birth:'2012-02-18'},
+  { id:'s27', name:'Izan Flores', tutor:'Eva Flores', rel:'madre', phone:'687012345', cls:'c5', notes:'' , birth:'2008-03-03'},
+  { id:'s28', name:'Laia Puig', tutor:'Joan Puig', rel:'padre', phone:'698123456', cls:'c5', notes:'' , birth:'2010-04-16'},
+  { id:'s29', name:'Bruno Sanz', tutor:'Marta Sanz', rel:'madre', phone:'609234567', cls:'c6', notes:'' , birth:'2017-05-01'},
 ];
 /* extras ya concedidos esta semana (se calculan con fechas reales más abajo) */
 let EXTRAS = [];
@@ -835,6 +839,7 @@ function renderTeacherPanel(){
     alerts.push({ t:'Clase al 100%', d:groupOf(c.id).name+' · '+c.start, c:'rose' }); });
   const dot={amber:'bg-amber-500',teal:'bg-violet-500',rose:'bg-rose-500'};
   $('alerts').innerHTML = alerts.length?alerts.map(a=>'<div class="flex gap-3 items-start"><span class="w-2 h-2 rounded-full mt-1.5 shrink-0 '+dot[a.c]+'"></span><div><div class="text-sm font-bold text-slate-800">'+a.t+'</div><div class="text-xs text-slate-500">'+a.d+'</div></div></div>').join(''):'<p class="text-sm text-slate-400">Sin alertas. Todo en orden.</p>';
+  renderNotifs(mySt.map(student));
   $('stats').innerHTML='';
 }
 function renderPanel(){
@@ -875,6 +880,7 @@ function renderPanel(){
     alerts.push({ t:'Familia en lista de espera', d:s.name+' · '+groupOf(w.classId).name+' ('+DAYN[c.days.find(d=>dstr(wd[d-1])===w.date)]+')', c:'teal' }); });
   CLASSES.forEach(c=>{ if(c.days.some(d=>{const o=occupancy(c.id,dstr(wd[d-1])); return o.used>=o.cap;})){
     alerts.push({ t:'Clase al 100%', d:groupOf(c.id).name+' · '+c.start, c:'rose' }); }});
+  renderNotifs(STUDENTS);
   const dot = { amber:'bg-amber-500', teal:'bg-violet-500', rose:'bg-rose-500' };
   $('alerts').innerHTML = alerts.length ? alerts.map(a=>
     '<div class="flex gap-3 items-start"><span class="w-2 h-2 rounded-full mt-1.5 shrink-0 '+dot[a.c]+'"></span>'+
@@ -1126,7 +1132,8 @@ function renderFichaLimited(id){
     '<div class="card p-5 md:p-6 mb-4"><div class="flex flex-wrap items-center gap-4">'+
       '<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>'+
       '<div class="flex-1 min-w-[200px]"><h2 class="text-xl md:text-2xl font-extrabold text-slate-900">'+s.name+'</h2>'+
-      '<div class="flex items-center gap-1.5 mt-1.5 text-sm"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+g.color+'"></span><span class="font-semibold text-slate-700">'+g.name+'</span><span class="text-slate-400">· '+c.days.map(d=>DAYN[d]).join(' y ')+' '+c.start+'–'+c.end+' · '+c.room+'</span></div></div>'+
+      '<div class="flex items-center gap-1.5 mt-1.5 text-sm"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+g.color+'"></span><span class="font-semibold text-slate-700">'+g.name+'</span><span class="text-slate-400">· '+c.days.map(d=>DAYN[d]).join(' y ')+' '+c.start+'–'+c.end+' · '+c.room+'</span></div>'+
+      (s.birth?'<div class="text-sm text-slate-500 mt-1">\u{1F382} Cumpleaños: '+shortDateEs(s.birth)+'</div>':'')+'</div>'+
     '</div></div>'+
     '<div class="grid md:grid-cols-3 gap-4">'+
       '<div class="card p-5"><h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Asistencia reciente</h3>'+
@@ -1157,6 +1164,7 @@ function renderFicha(id){
       '<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>'+
       '<div class="flex-1 min-w-[200px]"><h2 class="text-xl md:text-2xl font-extrabold text-slate-900">'+s.name+'</h2>'+
       '<div class="text-sm text-slate-500 mt-0.5">'+s.tutor+' ('+s.rel+') · <a class="text-violet-600 font-semibold" href="tel:'+s.phone+'">'+s.phone+'</a></div>'+
+      (s.birth?'<div class="text-sm text-slate-500 mt-0.5">\u{1F382} '+fullDateEs(s.birth)+' · '+ageOf(s.birth)+' años</div>':'')+
       '<div class="flex items-center gap-1.5 mt-1.5 text-sm"><span class="w-2.5 h-2.5 rounded-full" style="background:'+g.color+'"></span><span class="font-semibold text-slate-700">'+g.name+'</span><span class="text-slate-400">· '+DAYN[c.days[0]]+' y '+DAYN[c.days[1]]+' '+c.start+'–'+c.end+'</span></div></div>'+
       '<div class="flex gap-2"><a class="btn btn-wa" target="_blank" href="'+waLink(s.phone,'Hola '+s.tutor+', soy de Online Centro de Aprendizaje.')+'">'+icon('<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>',16)+' WhatsApp</a><button class="btn btn-ghost" onclick="openStudentForm(\''+id+'\')">Editar</button></div>'+
     '</div></div>'+
@@ -1202,6 +1210,8 @@ function openStudentForm(editId){
     '<select id="sfRel" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+relOpts+'</select></div></div>'+
     '<label class="text-xs font-semibold text-slate-500">MÓVIL DEL TUTOR</label>'+
     '<input id="sfPhone" value="'+(s?s.phone:'')+'" inputmode="numeric" placeholder="612 345 678" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
+    '<label class="text-xs font-semibold text-slate-500">FECHA DE NACIMIENTO</label>'+
+    '<input id="sfBirth" type="date" value="'+(s&&s.birth?s.birth:'')+'" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
     '<label class="text-xs font-semibold text-slate-500">OBSERVACIONES</label>'+
     '<input id="sfNotes" value="'+(s&&s.notes?s.notes.replace(/"/g,'&quot;'):'')+'" placeholder="Alergias, necesidades…" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-4 bg-white">'+
     (s?'':'<label class="flex items-start gap-2 mb-4 text-xs text-slate-500"><input type="checkbox" id="sfConsent" class="mt-0.5" checked> Acepto la política de privacidad y el tratamiento de los datos del menor (RGPD).</label>')+
@@ -1216,7 +1226,7 @@ function saveStudent(editId){
   if(editId){
     const s = student(editId);
     const oldCls = s.cls;
-    Object.assign(s, { name, tutor, rel:$('sfRel').value, phone, cls:classId, notes:$('sfNotes').value.trim() });
+    Object.assign(s, { name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, notes:$('sfNotes').value.trim() });
     if(oldCls!==classId){
       const r = RECEIPTS.find(r=>r.studentId===editId && r.month==='2026-10');
       if(r){ const nb = GROUPS[CLASSES.find(c=>c.id===classId).group].price; r.total = r.total - r.base + nb; r.base = nb; }
@@ -1225,7 +1235,7 @@ function saveStudent(editId){
     closeDrawer(); go('ficha', editId);
   } else {
     const id = 's'+Date.now();
-    STUDENTS.push({ id, name, tutor, rel:$('sfRel').value, phone, cls:classId, notes:$('sfNotes').value.trim() });
+    STUDENTS.push({ id, name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, notes:$('sfNotes').value.trim() });
     const base = GROUPS[CLASSES.find(c=>c.id===classId).group].price;
     RECEIPTS.push({ id:'r'+id, studentId:id, month:'2026-10', base, extras:0, total:base, status:'pending', remindedAt:null });
     CREDITS[id]=0;
@@ -1378,6 +1388,16 @@ function slotChips(room){
     const dl = g.days.length>1 ? DAYN[g.days[0]]+'–'+DAYN[g.days[g.days.length-1]] : DAYN[g.days[0]];
     return '<span class="chip bg-violet-50 text-violet-700 !py-1.5 !px-3" style="white-space:nowrap">'+dl+' · '+g.start+'–'+g.end+'</span>';
   }).join('')+'</div>';
+}
+/* ---------- cumpleaños ---------- */
+function isBirthdayToday(s){ if(!s||!s.birth) return false; const b=new Date(s.birth+'T12:00'), n=new Date(); return b.getMonth()===n.getMonth()&&b.getDate()===n.getDate(); }
+function ageOf(birth){ const b=new Date(birth+'T12:00'), n=new Date(); let a=n.getFullYear()-b.getFullYear(); const m=n.getMonth()-b.getMonth(); if(m<0||(m===0&&n.getDate()<b.getDate())) a--; return a; }
+function fullDateEs(ds){ const m=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']; const d=new Date(ds+'T12:00'); return d.getDate()+' de '+m[d.getMonth()]+' de '+d.getFullYear(); }
+function shortDateEs(ds){ const m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']; const d=new Date(ds+'T12:00'); return d.getDate()+' '+m[d.getMonth()]; }
+function renderNotifs(list){
+  const b = list.filter(isBirthdayToday);
+  $('notifs').innerHTML = b.length ? b.map(s=>'<div class="flex gap-3 items-start"><span class="text-xl shrink-0">\u{1F382}</span><div><div class="text-sm font-bold text-slate-800">Hoy es el cumpleaños de '+s.name+'</div><div class="text-xs text-slate-500">Cumple '+ageOf(s.birth)+' años · '+groupOf(s.cls).name+'</div></div></div>').join('')
+    : '<p class="text-sm text-slate-400">Sin notificaciones hoy.</p>';
 }
 function renderAulas(){
   if(!state.aulaDate) state.aulaDate = dstr(new Date());
