@@ -86,7 +86,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div>
-        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v15</span></div>
+        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v16</span></div>
         <div class="text-[11px] text-slate-400 mt-0.5">Online Centro de Aprendizaje</div>
       </div>
     </div>
@@ -111,7 +111,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div class="flex-1">
-        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v15</span></div>
+        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v16</span></div>
         <div class="text-[10px] text-slate-400">DEMO · datos de ejemplo</div>
       </div>
       <span class="chip bg-amber-100 text-amber-700 border border-amber-200">DEMO</span>
@@ -451,6 +451,8 @@ const GROUPS = {
   g6:{ name:'Matemáticas · Primaria', price:55, color:'#ec4899' },
 };
 let USERS = [];
+let PARTES = {}; /* parte de clase: clave fecha|classId -> {comment, closedAt, auto} */
+let parteConfirmKey = null;
 let ROOMS = []; /* se rellenan en initDemoData: [{name, desc, studentIds:[], slots:[{day,start,end}]}] */
 const CLASSES = [
   { id:'c1', group:'g1', days:[1,3], start:'17:00', end:'18:30', room:'Aula 1', cap:8, teacher:'Lucía Gómez' },
@@ -564,6 +566,23 @@ function initDemoData(){
       ATTENDANCE[key] = rec;
     });
   });
+  /* partes de la semana pasada: cerrados, con observaciones (demo) */
+  const wdPrev = weekDates(-1);
+  const _comments = [
+    'Repaso de ecuaciones. Buen ritmo en general, conviene insistir en los problemas.',
+    'Trabajamos redacción y comprensión. Faltó tiempo para el ejercicio oral.',
+    'Sesión práctica con pizarra. Todos participaron, buen ambiente.',
+    'Repaso antes del examen. Repartidos esquemas de resumen.'
+  ];
+  CLASSES.forEach((c,ci)=>{
+    c.days.forEach(d=>{
+      const dt = wdPrev[d-1]; if(!dt) return;
+      const key = dstr(dt)+'|'+c.id; const rec = {};
+      STUDENTS.filter(s=>s.cls===c.id).forEach((s,si)=>{ rec[s.id] = ((si+ci+d)%6===0) ? 'absent' : 'present'; });
+      ATTENDANCE[key] = rec;
+      PARTES[key] = { comment:_comments[(ci+d)%_comments.length], closedAt:dstr(dt)+'T'+c.end, auto:true };
+    });
+  });
   /* aulas: registro rico generado desde las clases */
   const _descs = { 'Aula 1':'Aula grande con pizarra digital. Para ESO y Bachillerato.', 'Aula 2':'Aula mediana, ideal para Primaria y grupos reducidos.' };
   const _teachers = { 'Aula 1':['Lucía Gómez'], 'Aula 2':['Carlos Ruiz','Ana Torres'] };
@@ -635,6 +654,62 @@ const isAdmin = ()=>state.user && state.user.role==='admin';
 const myAulas = ()=>!state.user ? [] : (isAdmin() ? ROOMS.map(r=>r.name) : ROOMS.filter(r=>(r.teachers||[]).includes(state.user.teacher)).map(r=>r.name));
 const myClasses = ()=>!state.user ? [] : (isAdmin() ? CLASSES : CLASSES.filter(c=>myAulas().includes(c.room)));
 const myStudentIds = ()=>{ const s=new Set(); myClasses().forEach(c=>STUDENTS.filter(x=>x.cls===c.id).forEach(x=>s.add(x.id))); return s; };
+/* ---------- parte de clase ---------- */
+function parteOf(key){ if(!PARTES[key]) PARTES[key] = {comment:'', closedAt:null, auto:false}; return PARTES[key]; }
+function isParteClosed(key){ const p=PARTES[key]; return !!(p && p.closedAt); }
+function nowLocal(){ const n=new Date(); return dstr(n)+'T'+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
+function autoClosePartes(){
+  const now = new Date();
+  for(let back=0; back<8; back++){
+    const dt = new Date(now); dt.setDate(dt.getDate()-back);
+    const ds = dstr(dt);
+    CLASSES.forEach(c=>{
+      if(!c.days.includes(dt.getDay())) return;
+      const key = ds+'|'+c.id;
+      if(isParteClosed(key)) return;
+      const end = new Date(ds+'T'+c.end+':00');
+      if(now.getTime() > end.getTime()+30*60000){
+        const p = parteOf(key); p.closedAt = ds+'T'+c.end; p.auto = true;
+      }
+    });
+  }
+}
+function closedCount(){ return Object.keys(PARTES).filter(k=>isParteClosed(k)).length; }
+function saveParteComment(key, val){
+  if(isParteClosed(key)) return;
+  parteOf(key).comment = val;
+}
+function askCloseParte(key){ parteConfirmKey = key; if(attRerender) attRerender(); else renderAttendance(); }
+function cancelCloseParte(){ parteConfirmKey = null; if(attRerender) attRerender(); else renderAttendance(); }
+function doCloseParte(key){
+  const p = parteOf(key); p.closedAt = nowLocal(); p.auto = false;
+  parteConfirmKey = null;
+  toast('Parte cerrado. Ya no se puede modificar.');
+  if(attRerender) attRerender(); else renderAttendance();
+}
+function parteHTML(classId, date){
+  const key = date+'|'+classId;
+  const p = PARTES[key];
+  const closed = isParteClosed(key);
+  const isFuture = date > dstr(new Date());
+  let inner = '<div class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Parte de la clase</div>';
+  if(isFuture){
+    inner += '<p class="text-xs text-slate-300 italic">La clase aún no se ha impartido.</p>';
+  } else if(parteConfirmKey===key){
+    inner += '<div class="rounded-xl bg-amber-50 border border-amber-200 p-3.5">'+
+      '<div class="text-sm font-bold text-amber-800 mb-1">¿Cerrar el parte?</div>'+
+      '<p class="text-xs text-slate-500 mb-3">Después no se podrá modificar ni la asistencia ni las observaciones.</p>'+
+      '<div class="flex gap-2"><button class="btn !py-2 flex-1 justify-center !bg-rose-500 !text-white font-bold" onclick="doCloseParte(\''+key+'\')">Sí, cerrar el parte</button>'+
+      '<button class="btn btn-ghost !py-2" onclick="cancelCloseParte()">Cancelar</button></div></div>';
+  } else if(closed){
+    inner += '<div class="flex items-center gap-2 mb-2"><span class="chip bg-slate-100 text-slate-500">Parte cerrado'+(p.closedAt?' · '+p.closedAt.slice(11,16):'')+(p.auto?' (auto)':'')+'</span></div>'+
+      (p.comment?'<p class="text-sm text-slate-600 bg-slate-50 border border-slate-100 rounded-xl p-3">'+p.comment.replace(/</g,'&lt;')+'</p>':'<p class="text-xs text-slate-300 italic">Sin observaciones.</p>');
+  } else {
+    inner += '<textarea onchange="saveParteComment(\''+key+'\',this.value)" rows="2" placeholder="Observaciones de la clase…" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mb-2.5 bg-white">'+(p?p.comment.replace(/</g,'&lt;'):'')+'</textarea>'+
+      '<button class="btn btn-primary w-full justify-center !py-2.5" onclick="askCloseParte(\''+key+'\')">Finalizar clase</button>';
+  }
+  return '<div class="mt-4 pt-3 border-t border-slate-100">'+inner+'</div>';
+}
 function showLogin(){ $('loginScreen').classList.remove('hidden'); }
 function hideLogin(){ $('loginScreen').classList.add('hidden'); }
 function doLogin(){
@@ -930,6 +1005,7 @@ function renderCalendar(){
   }).join('');
 }
 function openClass(classId, date){
+  if(date < dstr(new Date())){ openPastParte(classId, date); return; }
   attRerender = null;
   const c = cls(classId); const g = groupOf(classId);
   const o = occupancy(classId, date); const col = occColor(o.used,o.cap);
@@ -1174,6 +1250,7 @@ function deleteStudent(id){
 let attRerender = null;
 function renderAttendance(){
   attRerender = null;
+  autoClosePartes();
   const wd = weekDates(0);
   if(!state.attDate) state.attDate = dstr(new Date());
   const hasClass = d => CLASSES.some(c=>c.days.includes(d));
@@ -1206,10 +1283,12 @@ function renderAttendance(){
       (absentFixed.length?'<div class="mt-4 pt-3 border-t border-slate-100"><div class="text-xs font-bold uppercase tracking-wide text-rose-500 mb-2">Faltan '+absentFixed.length+' · avisar a los padres</div><div class="flex flex-wrap gap-2">'+
         absentFixed.map(s=>{ const msg='Hola '+s.tutor+', soy de Online Centro de Aprendizaje. Te escribo porque '+s.name+' no ha venido hoy a clase de '+g.name+'. ¿Está todo bien?';
           return '<a class="btn btn-wa !py-2" target="_blank" href="'+waLink(s.phone,msg)+'">'+(isAdmin()?'Avisar a '+s.tutor.split(' ')[0]:'Avisar')+'</a>'; }).join('')+'</div></div>':'')+
+      parteHTML(c.id, state.attDate)+
     '</div>';
   }).join('');
 }
 function setAtt(key, sid, val){
+  if(isParteClosed(key)){ toast('El parte está cerrado. No se puede modificar.', false); return; }
   if(!ATTENDANCE[key]) ATTENDANCE[key]={};
   const prev = ATTENDANCE[key][sid];
   ATTENDANCE[key][sid] = (prev===val) ? null : val;
@@ -1243,17 +1322,43 @@ function attListHTML(classId, date){
       return '<a class="btn btn-wa !py-2" target="_blank" href="'+waLink(s.phone,msg)+'">'+(isAdmin()?'Avisar a '+s.tutor.split(' ')[0]:'Avisar')+'</a>'; }).join('')+'</div></div>':'';
   return { rows, alertBox, done, total: all.length };
 }
+function openPastParte(classId, date){
+  attRerender = null;
+  const c = cls(classId), g = groupOf(classId);
+  const key = date+'|'+classId;
+  const rec = ATTENDANCE[key]||{};
+  const p = PARTES[key];
+  const all = STUDENTS.filter(s=>s.cls===classId);
+  const dd = new Date(date+'T12:00');
+  const rows = all.map(s=>{
+    const v = rec[s.id];
+    return '<div class="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0">'+
+      '<span class="w-9 h-9 rounded-full text-xs font-bold flex items-center justify-center text-white shrink-0" style="background:'+g.color+'">'+initials(s.name)+'</span>'+
+      '<span class="flex-1 text-sm font-medium text-slate-700">'+s.name+'</span>'+
+      (v==='present'?'<span class="chip bg-emerald-100 text-emerald-700">vino</span>':v==='absent'?'<span class="chip bg-rose-100 text-rose-600">falta</span>':'<span class="chip bg-slate-100 text-slate-400">—</span>')+'</div>';
+  }).join('');
+  $('drawerTitle').textContent = 'Parte · '+DAYN_L[dd.getDay()]+' '+dd.getDate()+'/'+(dd.getMonth()+1);
+  $('drawerBody').innerHTML =
+    '<div class="flex items-center gap-2 mb-1"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+g.color+'"></span><h4 class="font-bold text-slate-900">'+g.name+'</h4></div>'+
+    '<p class="text-sm text-slate-500 mb-4">'+c.start+'–'+c.end+' · '+c.room+' · '+c.teacher+'</p>'+
+    (p&&p.closedAt?'<div class="mb-3"><span class="chip bg-slate-100 text-slate-500">Parte cerrado'+(p.closedAt?' · '+p.closedAt.slice(11,16):'')+(p.auto?' (auto)':'')+'</span></div>':'')+
+    '<div class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Asistencia ('+all.length+')</div>'+rows+
+    '<div class="text-xs font-bold uppercase tracking-wide text-slate-400 mt-4 mb-2">Observaciones</div>'+
+    (p&&p.comment?'<p class="text-sm text-slate-600 bg-slate-50 border border-slate-100 rounded-xl p-3">'+p.comment.replace(/</g,'&lt;')+'</p>':'<p class="text-xs text-slate-300 italic">Sin observaciones registradas.</p>');
+  openDrawer();
+}
 function openAttDrawer(classId, date){
   const c = cls(classId); const g = groupOf(c.id);
   attRerender = ()=>openAttDrawer(classId, date);
   const L = attListHTML(classId, date);
+  const _parte = parteHTML(classId, date);
   $('drawerTitle').textContent = 'Pasar lista';
   $('drawerBody').innerHTML =
     '<div class="flex items-center gap-2 mb-1"><span class="w-2.5 h-2.5 rounded-full" style="background:'+g.color+'"></span>'+
     '<h4 class="font-bold text-slate-900">'+g.name+'</h4></div>'+
     '<p class="text-sm text-slate-500 mb-4">'+DAYN_L[new Date(date+'T12:00').getDay()]+' · '+c.start+'–'+c.end+' · '+c.room+' · '+c.teacher+'</p>'+
     '<div class="text-xs font-semibold text-slate-500 mb-2">'+L.done+'/'+L.total+' marcados</div>'+
-    L.rows + L.alertBox;
+    L.rows + L.alertBox + _parte;
   openDrawer();
 }
 function renderAulas(){
@@ -1867,6 +1972,12 @@ function actDelete(id){
 initDemoData();
 buildNav();
 go('panel');
+autoClosePartes();
+setInterval(()=>{
+  const n0 = closedCount();
+  autoClosePartes();
+  if(closedCount()>n0 && state.view==='asistencia' && (!document.activeElement || document.activeElement.tagName!=='TEXTAREA')) renderAttendance();
+}, 60000);
 setTimeout(()=>toast('Diseño Flux aplicado.'), 700);
 </script>
 </body>
