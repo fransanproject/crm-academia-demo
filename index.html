@@ -86,7 +86,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div>
-        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v21</span></div>
+        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v22</span></div>
         <div class="text-[11px] text-slate-400 mt-0.5">Online Centro de Aprendizaje</div>
       </div>
     </div>
@@ -111,7 +111,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div class="flex-1">
-        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v21</span></div>
+        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v22</span></div>
         <div class="text-[10px] text-slate-400">DEMO · datos de ejemplo</div>
       </div>
       <span class="chip bg-amber-100 text-amber-700 border border-amber-200">DEMO</span>
@@ -1205,7 +1205,7 @@ function renderStudents(){
   $('studentList').innerHTML = list.map(s=>{
     const g = groupOf(s.cls); const r = RECEIPTS.find(r=>r.studentId===s.id);
     return '<div class="card p-4 cursor-pointer hover:shadow-md transition-shadow" onclick="go(\'ficha\',\''+s.id+'\')">'+
-      '<div class="flex items-center gap-3 mb-3"><span class="w-11 h-11 rounded-full font-bold text-sm flex items-center justify-center text-white" style="background:'+g.color+'">'+initials(s.name)+'</span>'+
+      '<div class="flex items-center gap-3 mb-3">'+(s.photo?'<img src="'+s.photo+'" class="w-11 h-11 rounded-full object-cover shrink-0">':'<span class="w-11 h-11 rounded-full font-bold text-sm flex items-center justify-center text-white" style="background:'+g.color+'">'+initials(s.name)+'</span>')+
       '<div class="flex-1 min-w-0"><div class="font-bold text-slate-900 truncate">'+s.name+'</div>'+(isAdmin()?'<div class="text-xs text-slate-500 truncate">'+s.tutor+' ('+s.rel+')</div>':'')+'</div>'+
       (isAdmin()?(r.status==='pending'?'<span class="chip bg-amber-100 text-amber-700">pendiente cobro</span>':'<span class="chip bg-emerald-100 text-emerald-700">al día</span>'):'')+'</div>'+
       '<div class="flex items-center gap-1.5 text-xs text-slate-500"><span class="w-2 h-2 rounded-full" style="background:'+g.color+'"></span>'+g.name+'</div></div>';
@@ -1218,7 +1218,7 @@ function renderFichaLimited(id){
   const att = Object.entries(ATTENDANCE).filter(([k,v])=>v[id]).slice(-8).reverse();
   $('fichaBody').innerHTML =
     '<div class="card p-5 md:p-6 mb-4"><div class="flex flex-wrap items-center gap-4">'+
-      '<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>'+
+      (s.photo?'<img src="'+s.photo+'" class="w-16 h-16 rounded-2xl object-cover shadow shrink-0">':'<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>')+
       '<div class="flex-1 min-w-[200px]"><h2 class="text-xl md:text-2xl font-extrabold text-slate-900">'+s.name+'</h2>'+
       '<div class="flex items-center gap-1.5 mt-1.5 text-sm"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+g.color+'"></span><span class="font-semibold text-slate-700">'+g.name+'</span><span class="text-slate-400">· '+c.days.map(d=>DAYN[d]).join(' y ')+' '+c.start+'–'+c.end+' · '+c.room+'</span></div>'+
       (s.birth?'<div class="text-sm text-slate-500 mt-1">\u{1F382} Cumpleaños: '+shortDateEs(s.birth)+'</div>':'')+'</div>'+
@@ -1249,7 +1249,7 @@ function renderFicha(id){
   const payMsg = 'Hola '+s.tutor+', soy de Online Centro de Aprendizaje. Te escribo porque aún no hemos recibido el recibo de octubre de '+s.name+' ('+r.total+' €). ¿Puedes revisarlo cuando puedas? ¡Gracias!';
   $('fichaBody').innerHTML =
     '<div class="card p-5 md:p-6 mb-4"><div class="flex flex-wrap items-center gap-4">'+
-      '<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>'+
+      (s.photo?'<img src="'+s.photo+'" class="w-16 h-16 rounded-2xl object-cover shadow shrink-0">':'<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>')+
       '<div class="flex-1 min-w-[200px]"><h2 class="text-xl md:text-2xl font-extrabold text-slate-900">'+s.name+'</h2>'+
       '<div class="text-sm text-slate-500 mt-0.5">'+s.tutor+' ('+s.rel+') · <a class="text-violet-600 font-semibold" href="tel:'+s.phone+'">'+s.phone+'</a></div>'+
       (s.birth?'<div class="text-sm text-slate-500 mt-0.5">\u{1F382} '+fullDateEs(s.birth)+' · '+ageOf(s.birth)+' años</div>':'')+
@@ -1284,6 +1284,7 @@ function markReminded(rid){
 function openStudentForm(editId){
   attRerender = null;
   const s = editId ? student(editId) : null;
+  studentPhoto = s && s.photo ? s.photo : null;
   $('drawerTitle').textContent = s ? 'Editar alumno' : 'Nuevo alumno';
   const classOpts = CLASSES.map(c=>'<option value="'+c.id+'"'+(s&&s.cls===c.id?' selected':'')+'>'+groupOf(c.id).name+' · '+DAYN[c.days[0]]+'/'+DAYN[c.days[1]]+' '+c.start+'</option>').join('');
   const relOpts = ['madre','padre','tutor legal'].map(r=>'<option'+(s&&s.rel===r?' selected':'')+'>'+r+'</option>').join('');
@@ -1300,11 +1301,14 @@ function openStudentForm(editId){
     '<input id="sfPhone" value="'+(s?s.phone:'')+'" inputmode="numeric" placeholder="612 345 678" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
     '<label class="text-xs font-semibold text-slate-500">FECHA DE NACIMIENTO</label>'+
     '<input id="sfBirth" type="date" value="'+(s&&s.birth?s.birth:'')+'" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
+    '<label class="text-xs font-semibold text-slate-500">FOTO (opcional)</label>'+
+    '<div class="flex items-center gap-3 mt-1 mb-3" id="sfPhotoBox"></div>'+
     '<label class="text-xs font-semibold text-slate-500">OBSERVACIONES</label>'+
     '<input id="sfNotes" value="'+(s&&s.notes?s.notes.replace(/"/g,'&quot;'):'')+'" placeholder="Alergias, necesidades…" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-4 bg-white">'+
     (s?'':'<label class="flex items-start gap-2 mb-4 text-xs text-slate-500"><input type="checkbox" id="sfConsent" class="mt-0.5" checked> Acepto la política de privacidad y el tratamiento de los datos del menor (RGPD).</label>')+
     '<button class="btn btn-primary w-full justify-center !py-3" onclick="saveStudent(\''+(editId||'')+'\')">Guardar</button>'+
     (s&&isAdmin()?'<button class="text-xs text-rose-400 hover:underline mt-4" onclick="deleteStudent(\''+editId+'\')">Eliminar alumno</button>':'');
+  renderStuPhotoBox();
   openDrawer();
 }
 function saveStudent(editId){
@@ -1314,7 +1318,7 @@ function saveStudent(editId){
   if(editId){
     const s = student(editId);
     const oldCls = s.cls;
-    Object.assign(s, { name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, notes:$('sfNotes').value.trim() });
+    Object.assign(s, { name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, photo:studentPhoto, notes:$('sfNotes').value.trim() });
     if(oldCls!==classId){
       const r = RECEIPTS.find(r=>r.studentId===editId && r.month==='2026-10');
       if(r){ const nb = GROUPS[CLASSES.find(c=>c.id===classId).group].price; r.total = r.total - r.base + nb; r.base = nb; }
@@ -1323,7 +1327,7 @@ function saveStudent(editId){
     closeDrawer(); go('ficha', editId);
   } else {
     const id = 's'+Date.now();
-    STUDENTS.push({ id, name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, notes:$('sfNotes').value.trim() });
+    STUDENTS.push({ id, name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, photo:studentPhoto, notes:$('sfNotes').value.trim() });
     const base = GROUPS[CLASSES.find(c=>c.id===classId).group].price;
     RECEIPTS.push({ id:'r'+id, studentId:id, month:'2026-10', base, extras:0, total:base, status:'pending', remindedAt:null });
     CREDITS[id]=0;
@@ -1477,6 +1481,26 @@ function slotChips(room){
     return '<span class="chip bg-violet-50 text-violet-700 !py-1.5 !px-3" style="white-space:nowrap">'+dl+' · '+g.start+'–'+g.end+'</span>';
   }).join('')+'</div>';
 }
+/* ---------- foto de alumno ---------- */
+let studentPhoto = null;
+function stuPhoto(input){
+  const f = input.files && input.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{ studentPhoto = rd.result; renderStuPhotoBox(); toast('Foto añadida.'); };
+  rd.readAsDataURL(f);
+}
+function stuPhotoClear(){ studentPhoto = null; renderStuPhotoBox(); }
+function renderStuPhotoBox(){
+  const box = $('sfPhotoBox'); if(!box) return;
+  box.innerHTML =
+    (studentPhoto?'<img src="'+studentPhoto+'" class="w-16 h-16 rounded-xl object-cover border border-slate-200">':'<div class="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-300 text-2xl">\u{1F464}</div>')+
+    '<label class="btn btn-soft cursor-pointer !py-2">'+(studentPhoto?'Cambiar foto':'Elegir foto')+'<input type="file" accept="image/*" class="hidden" onchange="stuPhoto(this)"></label>'+
+    (studentPhoto?'<button class="text-xs text-rose-500 font-semibold" onclick="stuPhotoClear()">quitar</button>':'');
+}
+function stuAvatar(s, size, extra){
+  if(s.photo) return '<img src="'+s.photo+'" class="'+size+' object-cover shrink-0 '+(extra||'')+'" alt="">';
+  return '<span class="'+size+' font-bold flex items-center justify-center text-white shrink-0 '+(extra||'')+'" style="background:'+groupOf(s.cls).color+'">'+initials(s.name)+'</span>';
+}
 /* ---------- cumpleaños ---------- */
 function isBirthdayToday(s){ if(!s||!s.birth) return false; const b=new Date(s.birth+'T12:00'), n=new Date(); return b.getMonth()===n.getMonth()&&b.getDate()===n.getDate(); }
 function ageOf(birth){ const b=new Date(birth+'T12:00'), n=new Date(); let a=n.getFullYear()-b.getFullYear(); const m=n.getMonth()-b.getMonth(); if(m<0||(m===0&&n.getDate()<b.getDate())) a--; return a; }
@@ -1519,7 +1543,7 @@ function renderAulas(){
       (room.desc?'<p class="text-xs text-slate-500 mb-2.5">'+room.desc+'</p>':'')+
       ((room.teachers&&room.teachers.length)?'<div class="flex flex-wrap gap-1.5 mb-2.5">'+room.teachers.map(t=>'<span class="chip bg-slate-100 text-slate-500 !py-1">'+t+'</span>').join('')+'</div>':'')+
       (room.slots.length?slotChips(room):'')+
-      (room.studentIds.length?'<div class="flex items-center gap-2 mb-3"><div class="flex">'+room.studentIds.slice(0,6).map((id,ix)=>{ const s=student(id); return s?'<span class="w-7 h-7 rounded-full text-[10px] font-bold flex items-center justify-center text-white ring-2 ring-white" style="background:'+groupOf(s.cls).color+';margin-left:'+(ix?-8:0)+'px">'+initials(s.name)+'</span>':''; }).join('')+'</div><span class="text-xs text-slate-400">'+room.studentIds.length+' alumnos</span></div>':'')+
+      (room.studentIds.length?'<div class="text-xs text-slate-400 mb-3">'+room.studentIds.length+' alumnos</div>':'')+
       '<div class="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-2">Clases del día · pasar lista</div>'+
       (slots || '<p class="text-xs text-slate-300 italic py-2">Sin clases este día.</p>')+'</div>';
   }).join('');
