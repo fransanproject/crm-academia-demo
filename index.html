@@ -86,7 +86,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div>
-        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v19</span></div>
+        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v20</span></div>
         <div class="text-[11px] text-slate-400 mt-0.5">Online Centro de Aprendizaje</div>
       </div>
     </div>
@@ -111,7 +111,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div class="flex-1">
-        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v19</span></div>
+        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v20</span></div>
         <div class="text-[10px] text-slate-400">DEMO · datos de ejemplo</div>
       </div>
       <span class="chip bg-amber-100 text-amber-700 border border-amber-200">DEMO</span>
@@ -410,7 +410,7 @@
     <input id="loginPass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-4 bg-white" placeholder="••••••••">
     <button class="btn btn-primary w-full justify-center !py-3" onclick="doLogin()">Entrar</button>
     <div class="mt-5 rounded-xl bg-violet-50 border border-violet-100 p-3 text-xs text-slate-500">
-      <span class="font-bold text-violet-700">Demo:</span> admin / oca2026 &nbsp;·&nbsp; lucia / oca2026
+      <span class="font-bold text-violet-700">Demo:</span> admin / oca2026 &nbsp;·&nbsp; mili / oca2026
     </div>
   </div>
 </div>
@@ -463,12 +463,12 @@ let PARTES = {}; /* parte de clase: clave fecha|classId -> {comment, closedAt, a
 let parteConfirmKey = null;
 let ROOMS = []; /* se rellenan en initDemoData: [{name, desc, studentIds:[], slots:[{day,start,end}]}] */
 const CLASSES = [
-  { id:'c1', group:'g1', days:[1,3], start:'17:00', end:'18:30', room:'Aula 1', cap:8, teacher:'Lucía Gómez' },
-  { id:'c2', group:'g2', days:[1,3], start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Carlos Ruiz' },
-  { id:'c3', group:'g3', days:[2,4], start:'17:00', end:'18:30', room:'Aula 1', cap:6, teacher:'Lucía Gómez' },
+  { id:'c1', group:'g1', days:[1,3], start:'17:00', end:'18:30', room:'Aula 1', cap:8, teacher:'Mili' },
+  { id:'c2', group:'g2', days:[1,3], start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Javi' },
+  { id:'c3', group:'g3', days:[2,4], start:'17:00', end:'18:30', room:'Aula 1', cap:6, teacher:'Mili' },
   { id:'c4', group:'g4', days:[2,4], start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Ana Torres' },
-  { id:'c5', group:'g5', days:[5],    start:'17:00', end:'18:30', room:'Aula 1', cap:8, teacher:'Lucía Gómez' },
-  { id:'c6', group:'g6', days:[5],    start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Carlos Ruiz' },
+  { id:'c5', group:'g5', days:[5],    start:'17:00', end:'18:30', room:'Aula 1', cap:8, teacher:'Mili' },
+  { id:'c6', group:'g6', days:[5],    start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Javi' },
 ];
 const STUDENTS = [
   { id:'s01', name:'Marcos Vidal', tutor:'Elena Vidal', rel:'madre', phone:'612345678', cls:'c3', notes:'Examen de física el 24 de octubre. Traer calculadora.' , birth:'2010-01-01'},
@@ -593,7 +593,7 @@ function initDemoData(){
   });
   /* aulas: registro rico generado desde las clases */
   const _descs = { 'Aula 1':'Aula grande con pizarra digital. Para ESO y Bachillerato.', 'Aula 2':'Aula mediana, ideal para Primaria y grupos reducidos.' };
-  const _teachers = { 'Aula 1':['Lucía Gómez'], 'Aula 2':['Carlos Ruiz','Ana Torres'] };
+  const _teachers = { 'Aula 1':['Mili'], 'Aula 2':['Javi','Ana Torres'] };
   ROOMS = [...new Set(CLASSES.map(c=>c.room))].map(rn=>{
     const cs = CLASSES.filter(c=>c.room===rn);
     const slots = [];
@@ -604,8 +604,8 @@ function initDemoData(){
   /* usuarios: admin con acceso total + profesores limitados a sus clases */
   USERS = [
     { id:'u-admin', name:'Dirección OCA', user:'admin', pass:'oca2026', role:'admin', teacher:null, active:true },
-    { id:'u-lucia', name:'Lucía Gómez', user:'lucia', pass:'oca2026', role:'teacher', teacher:'Lucía Gómez', active:true },
-    { id:'u-carlos', name:'Carlos Ruiz', user:'carlos', pass:'oca2026', role:'teacher', teacher:'Carlos Ruiz', active:true },
+    { id:'u-lucia', name:'Mili', user:'mili', pass:'oca2026', role:'teacher', teacher:'Mili', active:true },
+    { id:'u-carlos', name:'Javi', user:'javi', pass:'oca2026', role:'teacher', teacher:'Javi', active:true },
     { id:'u-ana', name:'Ana Torres', user:'ana', pass:'oca2026', role:'teacher', teacher:'Ana Torres', active:true },
   ];
   try{ const sid=localStorage.getItem('oca_uid'); const su=sid&&USERS.find(x=>x.id===sid&&x.active); if(su) state.user=su; }catch(e){}
@@ -1602,7 +1602,7 @@ function renderUserForm(){
   const tn=[...new Set(CLASSES.map(c=>c.teacher))];
   $('drawerBody').innerHTML =
     '<label class="text-xs font-semibold text-slate-500">NOMBRE</label>'+
-    '<input id="usName" value="'+d.name.replace(/"/g,'&quot;')+'" placeholder="Ej. Lucía Gómez" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
+    '<input id="usName" value="'+d.name.replace(/"/g,'&quot;')+'" placeholder="Ej. Mili" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
     '<label class="text-xs font-semibold text-slate-500">USUARIO (para entrar)</label>'+
     '<input id="usUser" value="'+d.user.replace(/"/g,'&quot;')+'" placeholder="Ej. lucia" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
     '<label class="text-xs font-semibold text-slate-500">CONTRASEÑA</label>'+
