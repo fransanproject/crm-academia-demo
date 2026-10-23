@@ -86,7 +86,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div>
-        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v22</span></div>
+        <div class="text-slate-900 font-extrabold tracking-tight leading-none">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v23</span></div>
         <div class="text-[11px] text-slate-400 mt-0.5">Online Centro de Aprendizaje</div>
       </div>
     </div>
@@ -111,7 +111,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
       </div>
       <div class="flex-1">
-        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v22</span></div>
+        <div class="font-extrabold tracking-tight leading-none text-slate-900">OCA <span class="chip bg-violet-100 text-violet-700 !text-[10px] align-middle">v23</span></div>
         <div class="text-[10px] text-slate-400">DEMO · datos de ejemplo</div>
       </div>
       <span class="chip bg-amber-100 text-amber-700 border border-amber-200">DEMO</span>
@@ -196,6 +196,18 @@
         <div id="fichaBody"></div>
       </section>
 
+      <!-- ======== VIEW: MATERIAS ======== -->
+      <section id="v-materias" class="hidden">
+        <div class="flex items-end justify-between mb-5">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">Materias</h1>
+            <p class="text-sm text-slate-500 mt-1">Crea las materias con sus días, horas y profesor; luego asígnalas a las aulas</p>
+          </div>
+          <button class="btn btn-primary shrink-0" onclick="openSubjectForm()">+ Nueva materia</button>
+        </div>
+        <div id="subjGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </section>
+
       <!-- ======== VIEW: MATRICULAS ======== -->
       <section id="v-matriculas" class="hidden">
         <div class="mb-5">
@@ -207,7 +219,7 @@
             <h3 class="font-bold text-slate-900 mb-4">Nueva matrícula</h3>
             <div class="grid sm:grid-cols-2 gap-3">
               <div><label class="text-xs font-semibold text-slate-500">NOMBRE DEL ALUMNO</label><input id="mName" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1" placeholder="Ej. María López"></div>
-              <div><label class="text-xs font-semibold text-slate-500">GRUPO</label><select id="mGroup" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 bg-white"></select></div>
+              <div><label class="text-xs font-semibold text-slate-500">MATERIAS</label><div id="mSubjects" class="space-y-1.5 mt-1"></div></div>
               <div><label class="text-xs font-semibold text-slate-500">TUTOR (padre/madre)</label><input id="mTutor" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1" placeholder="Ej. Carmen López"></div>
               <div><label class="text-xs font-semibold text-slate-500">PARENTESCO</label><select id="mRel" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 bg-white"><option>madre</option><option>padre</option><option>tutor legal</option></select></div>
               <div><label class="text-xs font-semibold text-slate-500">MÓVIL DEL TUTOR</label><input id="mPhone" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1" placeholder="612 345 678" inputmode="numeric"></div>
@@ -450,56 +462,72 @@
 
 <script>
 /* ==================== DATOS DE EJEMPLO ==================== */
-const GROUPS = {
-  g1:{ name:'Matemáticas · ESO', price:65, color:'#14b8a6' },
-  g2:{ name:'Inglés · Primaria', price:55, color:'#0ea5e9' },
-  g3:{ name:'Física · Bachillerato', price:75, color:'#f59e0b' },
-  g4:{ name:'Lengua · ESO', price:65, color:'#10b981' },
-  g5:{ name:'Química · Bachillerato', price:75, color:'#8b5cf6' },
-  g6:{ name:'Matemáticas · Primaria', price:55, color:'#ec4899' },
-};
+let SUBJECTS = [
+  { id:'m1', name:'Matemáticas · ESO', price:65, color:'#14b8a6', cap:8, teacher:'Mili', slots:[{day:1,start:'17:00',end:'18:30'},{day:3,start:'17:00',end:'18:30'}] },
+  { id:'m2', name:'Inglés · Primaria', price:55, color:'#0ea5e9', cap:8, teacher:'Javi', slots:[{day:1,start:'17:00',end:'18:00'},{day:3,start:'18:00',end:'19:00'}] },
+  { id:'m3', name:'Física · Bachillerato', price:75, color:'#f59e0b', cap:6, teacher:'Mili', slots:[{day:2,start:'17:00',end:'18:30'},{day:4,start:'17:00',end:'18:30'}] },
+  { id:'m4', name:'Lengua · ESO', price:65, color:'#10b981', cap:8, teacher:'Ana Torres', slots:[{day:2,start:'18:30',end:'19:30'},{day:4,start:'18:30',end:'19:30'}] },
+  { id:'m5', name:'Química · Bachillerato', price:75, color:'#8b5cf6', cap:8, teacher:'Mili', slots:[{day:5,start:'17:00',end:'18:30'}] },
+  { id:'m6', name:'Matemáticas · Primaria', price:55, color:'#ec4899', cap:8, teacher:'Javi', slots:[{day:5,start:'18:30',end:'19:30'}] },
+];
 let USERS = [];
 let PARTES = {}; /* parte de clase: clave fecha|classId -> {comment, closedAt, auto} */
 let parteConfirmKey = null;
 let ROOMS = []; /* se rellenan en initDemoData: [{name, desc, studentIds:[], slots:[{day,start,end}]}] */
-const CLASSES = [
-  { id:'c1', group:'g1', days:[1,3], start:'17:00', end:'18:30', room:'Aula 1', cap:8, teacher:'Mili' },
-  { id:'c2', group:'g2', days:[1,3], start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Javi' },
-  { id:'c3', group:'g3', days:[2,4], start:'17:00', end:'18:30', room:'Aula 1', cap:6, teacher:'Mili' },
-  { id:'c4', group:'g4', days:[2,4], start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Ana Torres' },
-  { id:'c5', group:'g5', days:[5],    start:'17:00', end:'18:30', room:'Aula 1', cap:8, teacher:'Mili' },
-  { id:'c6', group:'g6', days:[5],    start:'18:30', end:'19:30', room:'Aula 2', cap:8, teacher:'Javi' },
-];
+let CLASSES = [];
+function rebuildClasses(){
+  CLASSES = [];
+  ROOMS.forEach(r=>(r.subjectIds||[]).forEach(sid=>{
+    const s = SUBJECTS.find(x=>x.id===sid); if(!s) return;
+    CLASSES.push({ id:sid+'__'+r.name, subjectId:sid, group:sid, room:r.name, cap:s.cap, teacher:s.teacher,
+      days:s.slots.map(x=>x.day), slots:s.slots.map(x=>({day:x.day,start:x.start,end:x.end})),
+      start:(s.slots[0]||{}).start||'', end:(s.slots[0]||{}).end||'' });
+  }));
+}
+function subj(id){ return SUBJECTS.find(x=>x.id===id); }
+function subjOf(classId){ const c=cls(classId); return c?subj(c.subjectId):null; }
+function slotOf(c, dayNum){ return (c.slots||[]).find(x=>x.day===dayNum) || {start:c.start||'', end:c.end||''}; }
+function subjectsOf(s){ return ((s&&s.subjects)||[]).map(subj).filter(Boolean); }
+function studentBase(s){ return subjectsOf(s).reduce((a,x)=>a+x.price,0); }
+function schedText(slots){
+  const ss = slots.slice().sort((a,b)=>a.day-b.day);
+  const groups = [];
+  ss.forEach(s=>{ const last=groups[groups.length-1];
+    if(last && last.start===s.start && last.end===s.end && s.day===last.days[last.days.length-1]+1) last.days.push(s.day);
+    else groups.push({days:[s.day], start:s.start, end:s.end}); });
+  return groups.map(g=>{ const dl = g.days.length>1 ? DAYN[g.days[0]]+'–'+DAYN[g.days[g.days.length-1]] : DAYN[g.days[0]];
+    return dl+' '+g.start+'–'+g.end; }).join(' · ');
+}
 const STUDENTS = [
-  { id:'s01', name:'Marcos Vidal', tutor:'Elena Vidal', rel:'madre', phone:'612345678', cls:'c3', notes:'Examen de física el 24 de octubre. Traer calculadora.' , birth:'2010-01-01'},
-  { id:'s02', name:'Lucía Ferrer', tutor:'Jorge Ferrer', rel:'padre', phone:'623456789', cls:'c4', notes:'' , birth:'2012-02-14'},
-  { id:'s03', name:'Hugo Serrano', tutor:'Marta Serrano', rel:'madre', phone:'634567890', cls:'c1', notes:'Examen de matemáticas el viernes 23.' , birth:'2013-10-19'},
-  { id:'s04', name:'Aitana Ruiz', tutor:'Pablo Ruiz', rel:'padre', phone:'645678901', cls:'c2', notes:'' , birth:'2018-10-19'},
-  { id:'s05', name:'Leo Martín', tutor:'Sara Martín', rel:'madre', phone:'656789012', cls:'c1', notes:'' , birth:'2012-05-25'},
-  { id:'s06', name:'Valeria Gil', tutor:'Iván Gil', rel:'padre', phone:'667890123', cls:'c5', notes:'' , birth:'2008-06-10'},
-  { id:'s07', name:'Diego Torres', tutor:'Laura Torres', rel:'madre', phone:'678901234', cls:'c3', notes:'Alergia a frutos secos.' , birth:'2010-07-23'},
-  { id:'s08', name:'Carla Navarro', tutor:'David Navarro', rel:'padre', phone:'689012345', cls:'c6', notes:'' , birth:'2017-08-08'},
-  { id:'s09', name:'Pablo Jiménez', tutor:'Ana Jiménez', rel:'madre', phone:'699123456', cls:'c2', notes:'' , birth:'2016-09-21'},
-  { id:'s10', name:'Sara Moreno', tutor:'Raúl Moreno', rel:'padre', phone:'600234567', cls:'c4', notes:'' , birth:'2013-10-06'},
-  { id:'s11', name:'Iván Castro', tutor:'Nuria Castro', rel:'madre', phone:'611345678', cls:'c1', notes:'' , birth:'2012-11-19'},
-  { id:'s12', name:'Marta López', tutor:'Sergio López', rel:'padre', phone:'622456789', cls:'c5', notes:'' , birth:'2008-12-04'},
-  { id:'s13', name:'Jorge Díaz', tutor:'Paula Díaz', rel:'madre', phone:'633567890', cls:'c3', notes:'' , birth:'2010-01-17'},
-  { id:'s14', name:'Elena Sánchez', tutor:'Mario Sánchez', rel:'padre', phone:'644678901', cls:'c2', notes:'' , birth:'2017-02-02'},
-  { id:'s15', name:'Adrián Pérez', tutor:'Lucía Pérez', rel:'madre', phone:'655789012', cls:'c6', notes:'' , birth:'2016-03-15'},
-  { id:'s16', name:'Nora Álvarez', tutor:'Hugo Álvarez', rel:'padre', phone:'666890123', cls:'c1', notes:'' , birth:'2013-04-28'},
-  { id:'s17', name:'Álex Romero', tutor:'Carmen Romero', rel:'madre', phone:'677901234', cls:'c1', notes:'' , birth:'2012-05-13'},
-  { id:'s18', name:'Julia Hernández', tutor:'Diego Hernández', rel:'padre', phone:'688012345', cls:'c1', notes:'' , birth:'2011-06-26'},
-  { id:'s19', name:'Mario Gutiérrez', tutor:'Irene Gutiérrez', rel:'madre', phone:'699123457', cls:'c1', notes:'' , birth:'2013-07-11'},
-  { id:'s20', name:'Emma Fernández', tutor:'Luis Fernández', rel:'padre', phone:'610345678', cls:'c2', notes:'' , birth:'2017-08-24'},
-  { id:'s21', name:'Liam García', tutor:'Marta García', rel:'madre', phone:'621456789', cls:'c2', notes:'' , birth:'2016-09-09'},
-  { id:'s22', name:'Oliver Martínez', tutor:'Rubén Martínez', rel:'padre', phone:'632567890', cls:'c3', notes:'' , birth:'2010-10-22'},
-  { id:'s23', name:'Noa Rodríguez', tutor:'Silvia Rodríguez', rel:'madre', phone:'643678901', cls:'c3', notes:'' , birth:'2009-11-07'},
-  { id:'s24', name:'Eric Vidal', tutor:'Andrés Vidal', rel:'padre', phone:'654789012', cls:'c3', notes:'' , birth:'2008-12-20'},
-  { id:'s25', name:'Aitor Beltrán', tutor:'Olga Beltrán', rel:'madre', phone:'665890123', cls:'c4', notes:'' , birth:'2013-01-05'},
-  { id:'s26', name:'Vega Campos', tutor:'Mario Campos', rel:'padre', phone:'676901234', cls:'c4', notes:'' , birth:'2012-02-18'},
-  { id:'s27', name:'Izan Flores', tutor:'Eva Flores', rel:'madre', phone:'687012345', cls:'c5', notes:'' , birth:'2008-03-03'},
-  { id:'s28', name:'Laia Puig', tutor:'Joan Puig', rel:'padre', phone:'698123456', cls:'c5', notes:'' , birth:'2010-04-16'},
-  { id:'s29', name:'Bruno Sanz', tutor:'Marta Sanz', rel:'madre', phone:'609234567', cls:'c6', notes:'' , birth:'2017-05-01'},
+  { id:'s01', name:'Marcos Vidal', tutor:'Elena Vidal', rel:'madre', phone:'612345678', subjects:['m3'], notes:'Examen de física el 24 de octubre. Traer calculadora.' , birth:'2010-01-01'},
+  { id:'s02', name:'Lucía Ferrer', tutor:'Jorge Ferrer', rel:'padre', phone:'623456789', subjects:['m4','m1'], notes:'' , birth:'2012-02-14'},
+  { id:'s03', name:'Hugo Serrano', tutor:'Marta Serrano', rel:'madre', phone:'634567890', subjects:['m1'], notes:'Examen de matemáticas el viernes 23.' , birth:'2013-10-19'},
+  { id:'s04', name:'Aitana Ruiz', tutor:'Pablo Ruiz', rel:'padre', phone:'645678901', subjects:['m2'], notes:'' , birth:'2018-10-19'},
+  { id:'s05', name:'Leo Martín', tutor:'Sara Martín', rel:'madre', phone:'656789012', subjects:['m1'], notes:'' , birth:'2012-05-25'},
+  { id:'s06', name:'Valeria Gil', tutor:'Iván Gil', rel:'padre', phone:'667890123', subjects:['m5'], notes:'' , birth:'2008-06-10'},
+  { id:'s07', name:'Diego Torres', tutor:'Laura Torres', rel:'madre', phone:'678901234', subjects:['m3'], notes:'Alergia a frutos secos.' , birth:'2010-07-23'},
+  { id:'s08', name:'Carla Navarro', tutor:'David Navarro', rel:'padre', phone:'689012345', subjects:['m6'], notes:'' , birth:'2017-08-08'},
+  { id:'s09', name:'Pablo Jiménez', tutor:'Ana Jiménez', rel:'madre', phone:'699123456', subjects:['m2'], notes:'' , birth:'2016-09-21'},
+  { id:'s10', name:'Sara Moreno', tutor:'Raúl Moreno', rel:'padre', phone:'600234567', subjects:['m4'], notes:'' , birth:'2013-10-06'},
+  { id:'s11', name:'Iván Castro', tutor:'Nuria Castro', rel:'madre', phone:'611345678', subjects:['m1'], notes:'' , birth:'2012-11-19'},
+  { id:'s12', name:'Marta López', tutor:'Sergio López', rel:'padre', phone:'622456789', subjects:['m5'], notes:'' , birth:'2008-12-04'},
+  { id:'s13', name:'Jorge Díaz', tutor:'Paula Díaz', rel:'madre', phone:'633567890', subjects:['m3'], notes:'' , birth:'2010-01-17'},
+  { id:'s14', name:'Elena Sánchez', tutor:'Mario Sánchez', rel:'padre', phone:'644678901', subjects:['m2'], notes:'' , birth:'2017-02-02'},
+  { id:'s15', name:'Adrián Pérez', tutor:'Lucía Pérez', rel:'madre', phone:'655789012', subjects:['m6'], notes:'' , birth:'2016-03-15'},
+  { id:'s16', name:'Nora Álvarez', tutor:'Hugo Álvarez', rel:'padre', phone:'666890123', subjects:['m1'], notes:'' , birth:'2013-04-28'},
+  { id:'s17', name:'Álex Romero', tutor:'Carmen Romero', rel:'madre', phone:'677901234', subjects:['m1'], notes:'' , birth:'2012-05-13'},
+  { id:'s18', name:'Julia Hernández', tutor:'Diego Hernández', rel:'padre', phone:'688012345', subjects:['m1'], notes:'' , birth:'2011-06-26'},
+  { id:'s19', name:'Mario Gutiérrez', tutor:'Irene Gutiérrez', rel:'madre', phone:'699123457', subjects:['m1'], notes:'' , birth:'2013-07-11'},
+  { id:'s20', name:'Emma Fernández', tutor:'Luis Fernández', rel:'padre', phone:'610345678', subjects:['m2'], notes:'' , birth:'2017-08-24'},
+  { id:'s21', name:'Liam García', tutor:'Marta García', rel:'madre', phone:'621456789', subjects:['m2','m6'], notes:'' , birth:'2016-09-09'},
+  { id:'s22', name:'Oliver Martínez', tutor:'Rubén Martínez', rel:'padre', phone:'632567890', subjects:['m3'], notes:'' , birth:'2010-10-22'},
+  { id:'s23', name:'Noa Rodríguez', tutor:'Silvia Rodríguez', rel:'madre', phone:'643678901', subjects:['m3'], notes:'' , birth:'2009-11-07'},
+  { id:'s24', name:'Eric Vidal', tutor:'Andrés Vidal', rel:'padre', phone:'654789012', subjects:['m3'], notes:'' , birth:'2008-12-20'},
+  { id:'s25', name:'Aitor Beltrán', tutor:'Olga Beltrán', rel:'madre', phone:'665890123', subjects:['m4'], notes:'' , birth:'2013-01-05'},
+  { id:'s26', name:'Vega Campos', tutor:'Mario Campos', rel:'padre', phone:'676901234', subjects:['m4'], notes:'' , birth:'2012-02-18'},
+  { id:'s27', name:'Izan Flores', tutor:'Eva Flores', rel:'madre', phone:'687012345', subjects:['m5'], notes:'' , birth:'2008-03-03'},
+  { id:'s28', name:'Laia Puig', tutor:'Joan Puig', rel:'padre', phone:'698123456', subjects:['m5'], notes:'' , birth:'2010-04-16'},
+  { id:'s29', name:'Bruno Sanz', tutor:'Marta Sanz', rel:'madre', phone:'609234567', subjects:['m6'], notes:'' , birth:'2017-05-01'},
 ];
 /* extras ya concedidos esta semana (se calculan con fechas reales más abajo) */
 let EXTRAS = [];
@@ -529,14 +557,19 @@ function mondayOf(offset){
 function weekDates(offset){ const m = mondayOf(offset); return [0,1,2,3,4].map(i=>{ const d=new Date(m); d.setDate(m.getDate()+i); return d; }); }
 
 function initDemoData(){
+  ROOMS = [
+    { name:'Aula 1', desc:'Aula grande con pizarra digital. Para ESO y Bachillerato.', subjectIds:['m1','m3','m5'] },
+    { name:'Aula 2', desc:'Aula mediana, ideal para Primaria y grupos reducidos.', subjectIds:['m2','m4','m6'] },
+  ];
+  rebuildClasses();
   const wd = weekDates(0); // lun..vie de esta semana
   const fri = dstr(wd[4]);
-  EXTRAS = [ { id:'x1', studentId:'s02', classId:'c5', date:fri, status:'confirmada' } ]; // Lucía, extra viernes química
-  WAITLIST = [ { studentId:'s03', classId:'c3', date:dstr(wd[3]), since:'ayer 19:42' } ]; // Hugo en espera física jueves
+  EXTRAS = [ { id:'x1', studentId:'s02', classId:'m5__Aula 1', date:fri, status:'confirmada' } ]; // Lucía, extra viernes química
+  WAITLIST = [ { studentId:'s03', classId:'m3__Aula 1', date:dstr(wd[3]), since:'ayer 19:42' } ]; // Hugo en espera física jueves
   CREDITS = { s05:1, s14:2, s21:1, s02:1 }; // créditos de recuperación iniciales
   const pendingIds = ['s03','s07','s11','s18','s22','s27'];
   RECEIPTS = STUDENTS.map((s,i)=>{
-    const base = GROUPS[CLASSES.find(c=>c.id===s.cls).group].price;
+    const base = studentBase(s);
     const extras = EXTRAS.filter(e=>e.studentId===s.id).length * EXTRA_PRICE;
     const pending = pendingIds.includes(s.id);
     return { id:'r'+s.id, studentId:s.id, month:'2026-10', base, extras, total:base+extras,
@@ -558,7 +591,7 @@ function initDemoData(){
   /* histórico de recibos para la estadística (demo) */
   ['2026-07','2026-08','2026-09'].forEach(m=>{
     STUDENTS.forEach(s=>{
-      const base = GROUPS[CLASSES.find(c=>c.id===s.cls).group].price;
+      const base = studentBase(s);
       const pending = (m==='2026-09'&&(s.id==='s03'||s.id==='s22')) || (m==='2026-08'&&s.id==='s11');
       RECEIPTS.push({ id:'r'+s.id+'-'+m, studentId:s.id, month:m, base, extras:0, total:base, status:pending?'pending':'paid', remindedAt:null });
     });
@@ -570,7 +603,7 @@ function initDemoData(){
     c.days.forEach(d=>{
       const dt = wd0[d-1]; if(!dt || dt > today0) return;
       const key = dstr(dt)+'|'+c.id; const rec = {};
-      STUDENTS.filter(s=>s.cls===c.id).forEach((s,si)=>{ rec[s.id] = ((si+ci+d)%6===0) ? 'absent' : 'present'; });
+      fixedOf(c.id).forEach((s,si)=>{ rec[s.id] = ((si+ci+d)%6===0) ? 'absent' : 'present'; });
       ATTENDANCE[key] = rec;
     });
   });
@@ -586,20 +619,10 @@ function initDemoData(){
     c.days.forEach(d=>{
       const dt = wdPrev[d-1]; if(!dt) return;
       const key = dstr(dt)+'|'+c.id; const rec = {};
-      STUDENTS.filter(s=>s.cls===c.id).forEach((s,si)=>{ rec[s.id] = ((si+ci+d)%6===0) ? 'absent' : 'present'; });
+      fixedOf(c.id).forEach((s,si)=>{ rec[s.id] = ((si+ci+d)%6===0) ? 'absent' : 'present'; });
       ATTENDANCE[key] = rec;
-      PARTES[key] = { comment:_comments[(ci+d)%_comments.length], closedAt:dstr(dt)+'T'+c.end, auto:true };
+      PARTES[key] = { comment:_comments[(ci+d)%_comments.length], closedAt:dstr(dt)+'T'+slotOf(c,d).end, auto:true };
     });
-  });
-  /* aulas: registro rico generado desde las clases */
-  const _descs = { 'Aula 1':'Aula grande con pizarra digital. Para ESO y Bachillerato.', 'Aula 2':'Aula mediana, ideal para Primaria y grupos reducidos.' };
-  const _teachers = { 'Aula 1':['Mili'], 'Aula 2':['Javi','Ana Torres'] };
-  ROOMS = [...new Set(CLASSES.map(c=>c.room))].map(rn=>{
-    const cs = CLASSES.filter(c=>c.room===rn);
-    const slots = [];
-    cs.forEach(c=>c.days.forEach(d=>slots.push({day:d, start:c.start, end:c.end})));
-    const studentIds = [...new Set(cs.flatMap(c=>STUDENTS.filter(s=>s.cls===c.id).map(s=>s.id)))];
-    return { name:rn, desc:_descs[rn]||'', teachers:(_teachers[rn]||[]).slice(), studentIds, slots };
   });
   /* usuarios: admin con acceso total + profesores limitados a sus clases */
   USERS = [
@@ -625,8 +648,8 @@ function toast(msg, ok=true){
 function waLink(phone, text){ return 'https://wa.me/34'+phone+'?text='+encodeURIComponent(text); }
 function student(id){ return STUDENTS.find(s=>s.id===id); }
 function cls(id){ return CLASSES.find(c=>c.id===id); }
-function groupOf(classId){ return GROUPS[cls(classId).group]; }
-function fixedOf(classId){ return STUDENTS.filter(s=>s.cls===classId); }
+function groupOf(classId){ return subjOf(classId) || { name:'—', price:0, color:'#94a3b8' }; }
+function fixedOf(classId){ const c=cls(classId); return c?STUDENTS.filter(s=>(s.subjects||[]).includes(c.subjectId)):[]; }
 function extrasOf(classId, date){ return EXTRAS.filter(e=>e.classId===classId && e.date===date && e.status==='confirmada'); }
 function occupancy(classId, date){
   const c = cls(classId);
@@ -645,6 +668,7 @@ const NAV = [
   { id:'panel', label:'Panel', roles:['admin','teacher'], icon:'<path d="M3 12l9-9 9 9"/><path d="M5 10v10h5v-6h4v6h5V10"/>' },
   { id:'calendario', label:'Calendario', roles:['admin','teacher'], icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>' },
   { id:'alumnos', label:'Alumnos', roles:['admin','teacher'], icon:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>' },
+  { id:'materias', label:'Materias', bottom:false, roles:['admin'], icon:'<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>' },
   { id:'matriculas', label:'Matrículas', bottom:false, roles:['admin'], icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15h6"/>' },
   { id:'avisos', label:'Avisos', bottom:false, roles:['admin'], icon:'<path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/>' },
   { id:'asistencia', label:'Asistencia', roles:['admin','teacher'], icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>' },
@@ -659,9 +683,8 @@ function icon(paths, s=18){ return '<svg width="'+s+'" height="'+s+'" viewBox="0
 /* ---------- sesión, roles y usuarios ---------- */
 const isAdmin = ()=>state.user && state.user.role==='admin';
 
-const myAulas = ()=>!state.user ? [] : (isAdmin() ? ROOMS.map(r=>r.name) : ROOMS.filter(r=>(r.teachers||[]).includes(state.user.teacher)).map(r=>r.name));
-const myClasses = ()=>!state.user ? [] : (isAdmin() ? CLASSES : CLASSES.filter(c=>myAulas().includes(c.room)));
-const myStudentIds = ()=>{ const s=new Set(); myClasses().forEach(c=>STUDENTS.filter(x=>x.cls===c.id).forEach(x=>s.add(x.id))); return s; };
+const myClasses = ()=>!state.user ? [] : (isAdmin() ? CLASSES : CLASSES.filter(c=>c.teacher===state.user.teacher));
+const myStudentIds = ()=>{ const s=new Set(); myClasses().forEach(c=>fixedOf(c.id).forEach(x=>s.add(x.id))); return s; };
 /* ---------- parte de clase ---------- */
 function parteOf(key){ if(!PARTES[key]) PARTES[key] = {comment:'', closedAt:null, auto:false}; return PARTES[key]; }
 function isParteClosed(key){ const p=PARTES[key]; return !!(p && p.closedAt); }
@@ -675,9 +698,10 @@ function autoClosePartes(){
       if(!c.days.includes(dt.getDay())) return;
       const key = ds+'|'+c.id;
       if(isParteClosed(key)) return;
-      const end = new Date(ds+'T'+c.end+':00');
+      const endT = slotOf(c, dt.getDay()).end;
+      const end = new Date(ds+'T'+endT+':00');
       if(now.getTime() > end.getTime()+30*60000){
-        const p = parteOf(key); p.closedAt = ds+'T'+c.end; p.auto = true;
+        const p = parteOf(key); p.closedAt = ds+'T'+endT; p.auto = true;
       }
     });
   }
@@ -762,8 +786,8 @@ function saveMyAccount(){
   }
   if(u.role==='teacher' && u.teacher && u.teacher!==name){
     const old = u.teacher;
-    CLASSES.forEach(c=>{ if(c.teacher===old) c.teacher = name; });
-    ROOMS.forEach(r=>{ r.teachers = (r.teachers||[]).map(t=>t===old?name:t); });
+    SUBJECTS.forEach(x=>{ if(x.teacher===old) x.teacher = name; });
+    rebuildClasses();
     u.teacher = name;
   }
   u.name = name; u.user = user;
@@ -789,7 +813,7 @@ function renderUserChip(){
   if($('userChipM')) $('userChipM').innerHTML=html;
 }
 const NAVSECTIONS = [
-  { title:'Gestión', items:['panel','calendario','alumnos','matriculas'] },
+  { title:'Gestión', items:['panel','calendario','alumnos','materias','matriculas'] },
   { title:'Comunicación', items:['whatsapp','avisos'] },
   { title:'Actividades', items:['eventos','campus'] },
   { title:'Operativa', items:['aulas','asistencia','cobros'] },
@@ -822,7 +846,7 @@ function go(view, arg){
   if(nv && nv.roles && !nv.roles.includes(state.user.role)){ toast('No tienes permiso para ver esta sección.', false); return; }
   if(view==='ficha' && !isAdmin() && !myStudentIds().has(arg)){ toast('Este alumno no es de tus clases.', false); return; }
   state.view = view;
-  ['panel','calendario','alumnos','ficha','matriculas','avisos','aulas','asistencia','cobros','whatsapp','eventos','campus','usuarios'].forEach(v=>$('v-'+v).classList.add('hidden'));
+  ['panel','calendario','alumnos','ficha','materias','matriculas','avisos','aulas','asistencia','cobros','whatsapp','eventos','campus','usuarios'].forEach(v=>$('v-'+v).classList.add('hidden'));
   $('v-'+view).classList.remove('hidden');
   document.querySelectorAll('[data-nav]').forEach(b=>{
     const on = b.dataset.nav===view || (view==='ficha'&&b.dataset.nav==='alumnos');
@@ -834,6 +858,7 @@ function go(view, arg){
   if(view==='calendario') renderCalendar();
   if(view==='alumnos') renderStudents();
   if(view==='ficha') renderFicha(arg);
+  if(view==='materias') renderSubjects();
   if(view==='matriculas') renderMatriculas();
   if(view==='avisos') renderAvisos();
   if(view==='asistencia') renderAttendance();
@@ -874,7 +899,7 @@ function renderTeacherPanel(){
     return '<div class="border-b border-slate-100 pb-3 last:border-0 last:pb-0"><div class="flex items-center gap-2 mb-2">'+
       '<span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+g.color+'"></span>'+
       '<span class="font-semibold text-sm text-slate-800">'+g.name+'</span>'+
-      '<span class="text-xs text-slate-400 ml-auto">'+c.start+'\u2013'+c.end+' · '+c.room+'</span></div>'+
+      '<span class="text-xs text-slate-400 ml-auto">'+slotOf(c, now.getDay()).start+'\u2013'+slotOf(c, now.getDay()).end+' · '+c.room+'</span></div>'+
       '<div class="flex items-center gap-2"><span class="text-xs text-slate-500 flex-1">'+o.used+'/'+o.cap+' alumnos</span>'+
       '<button class="btn btn-primary !py-2" onclick="go(\'asistencia\')">Pasar lista</button></div></div>';
   }).join('') : '<p class="text-sm text-slate-400">No tienes clases hoy.</p>';
@@ -882,7 +907,7 @@ function renderTeacherPanel(){
   const absToday = todayCls.reduce((a,c)=>{ const rec=ATTENDANCE[ds+'|'+c.id]||{}; return a+Object.values(rec).filter(v=>v==='absent').length; },0);
   if(absToday) alerts.push({ t:absToday+' ausencia(s) hoy', d:'Avisa a las familias con el botón de WhatsApp', c:'amber' });
   mc.forEach(c=>{ if(c.days.some(d=>{const o=occupancy(c.id,dstr(wd[d-1])); return o.used>=o.cap;}))
-    alerts.push({ t:'Clase al 100%', d:groupOf(c.id).name+' · '+c.start, c:'rose' }); });
+    alerts.push({ t:'Clase al 100%', d:groupOf(c.id).name+' · '+schedText(c.slots), c:'rose' }); });
   const dot={amber:'bg-amber-500',teal:'bg-violet-500',rose:'bg-rose-500'};
   $('alerts').innerHTML = alerts.length?alerts.map(a=>'<div class="flex gap-3 items-start"><span class="w-2 h-2 rounded-full mt-1.5 shrink-0 '+dot[a.c]+'"></span><div><div class="text-sm font-bold text-slate-800">'+a.t+'</div><div class="text-xs text-slate-500">'+a.d+'</div></div></div>').join(''):'<p class="text-sm text-slate-400">Sin alertas. Todo en orden.</p>';
   renderNotifs(mySt.map(student));
@@ -901,7 +926,7 @@ function renderPanel(){
   const avgOcc = Math.round(sum/n*100);
   const full = CLASSES.filter(c=>c.days.some(d=>occupancy(c.id,dstr(wd[d-1])).used>=cls(c.id).cap)).length;
   $('kpis').innerHTML = [
-    { l:'Alumnos activos', v:STUDENTS.length, s:'en 6 grupos', g:'linear-gradient(135deg,#6366f1,#8b5cf6)', go:"go('alumnos')", icon:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>' },
+    { l:'Alumnos activos', v:STUDENTS.length, s:'en '+SUBJECTS.length+' materias', g:'linear-gradient(135deg,#6366f1,#8b5cf6)', go:"go('alumnos')", icon:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>' },
     { l:'Ocupación media', v:avgOcc+'%', s:'plazas ocupadas/semana', g:'linear-gradient(135deg,#0ea5e9,#6366f1)', go:"go('calendario')", icon:'<path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 4-7"/>' },
     { l:'Pendiente de cobro', v:pendTotal+' €', s:pend.length+' recibos sin cobrar', g:'linear-gradient(135deg,#f59e0b,#f97316)', go:"state.billFilter='pending';go('cobros')", icon:'<rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/>' },
     { l:'Clases llenas', v:full, s:'esta semana · ver calendario', g:'linear-gradient(135deg,#8b5cf6,#d946ef)', go:"go('calendario')", icon:'<path d="M12 2c1 4-4 5-4 10a4 4 0 008 0c0-2-1-3-1-3s3 1 3 5a6 6 0 01-12 0C6 7 12 6 12 2z"/>' },
@@ -917,7 +942,7 @@ function renderPanel(){
     return '<div class="border-b border-slate-100 pb-3 last:border-0 last:pb-0"><div class="flex items-center gap-2 mb-2">'+
       '<span class="w-2.5 h-2.5 rounded-full" style="background:'+g.color+'"></span>'+
       '<span class="font-semibold text-sm text-slate-800">'+g.name+'</span>'+
-      '<span class="text-xs text-slate-400 ml-auto">'+c.start+'–'+c.end+'</span></div>'+rows+'</div>';
+      '<span class="text-xs text-slate-400 ml-auto">'+schedText(c.slots)+'</span></div>'+rows+'</div>';
   }).join('');
   const alerts = [];
   pend.filter(r=>!r.remindedAt).forEach(r=>{ const s=student(r.studentId);
@@ -925,7 +950,7 @@ function renderPanel(){
   WAITLIST.forEach(w=>{ const s=student(w.studentId); const c=cls(w.classId);
     alerts.push({ t:'Familia en lista de espera', d:s.name+' · '+groupOf(w.classId).name+' ('+DAYN[c.days.find(d=>dstr(wd[d-1])===w.date)]+')', c:'teal' }); });
   CLASSES.forEach(c=>{ if(c.days.some(d=>{const o=occupancy(c.id,dstr(wd[d-1])); return o.used>=o.cap;})){
-    alerts.push({ t:'Clase al 100%', d:groupOf(c.id).name+' · '+c.start, c:'rose' }); }});
+    alerts.push({ t:'Clase al 100%', d:groupOf(c.id).name+' · '+schedText(c.slots), c:'rose' }); }});
   renderNotifs(STUDENTS);
   const dot = { amber:'bg-amber-500', teal:'bg-violet-500', rose:'bg-rose-500' };
   $('alerts').innerHTML = alerts.length ? alerts.map(a=>
@@ -996,7 +1021,7 @@ function weekAttBars(){
   const rows = wdA.map((dt,i)=>{
     const ds = dstr(dt); let tot=0, pres=0;
     CLASSES.forEach(c=>{ if(!c.days.includes(i+1)) return;
-      STUDENTS.filter(s=>s.cls===c.id).forEach(s=>{ const v=(ATTENDANCE[ds+'|'+c.id]||{})[s.id]; if(v==='present'||v==='absent'){ tot++; if(v==='present') pres++; } });
+      fixedOf(c.id).forEach(s=>{ const v=(ATTENDANCE[ds+'|'+c.id]||{})[s.id]; if(v==='present'||v==='absent'){ tot++; if(v==='present') pres++; } });
     });
     const pct = tot? Math.round(pres/tot*100) : null;
     const future = dt > today;
@@ -1088,7 +1113,7 @@ function renderCalendar(){
       return '<div class="classblock border rounded-xl p-3 mb-2 '+OCC_SOFT[col]+'" onclick="openClass(\''+c.id+'\',\''+ds+'\')">'+
         '<div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full shrink-0" style="background:'+g.color+'"></span>'+
         '<span class="text-[13px] font-bold text-slate-800 leading-tight">'+g.name+'</span></div>'+
-        '<div class="text-[11px] text-slate-500 font-medium">'+c.start+'–'+c.end+' · '+c.room+'</div>'+
+        '<div class="text-[11px] text-slate-500 font-medium">'+slotOf(c, di+1).start+'–'+slotOf(c, di+1).end+' · '+c.room+'</div>'+
         '<div class="flex items-center justify-between mt-2"><span class="text-[11px] font-bold '+OCC_TXT[col]+'">'+o.used+'/'+o.cap+'</span>'+
         (o.used>=o.cap?'<span class="chip bg-rose-500 text-white">LLENA</span>':(o.used/o.cap>=.8?'<span class="chip bg-amber-100 text-amber-700">casi llena</span>':'<span class="chip bg-emerald-100 text-emerald-700">'+(o.cap-o.used)+' libres</span>'))+'</div></div>';
     }).join('') || '<p class="text-xs text-slate-300 italic px-1">Sin clases</p>';
@@ -1108,7 +1133,7 @@ function openClass(classId, date){
   $('drawerTitle').textContent = g.name;
   $('drawerBody').innerHTML =
     '<div class="flex items-center gap-2 text-sm text-slate-500 mb-4">'+icon('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',16)+
-    '<span class="font-medium">'+DAYN_L[new Date(date+'T12:00').getDay()]+' · '+c.start+'–'+c.end+' · '+c.room+' · '+c.teacher+'</span></div>'+
+    '<span class="font-medium">'+DAYN_L[new Date(date+'T12:00').getDay()]+' · '+slotOf(c, new Date(date+'T12:00').getDay()).start+'–'+slotOf(c, new Date(date+'T12:00').getDay()).end+' · '+c.room+' · '+c.teacher+'</span></div>'+
     '<div class="card p-4 mb-4"><div class="flex justify-between items-center mb-2"><span class="text-sm font-semibold text-slate-700">Ocupación</span>'+
     '<span class="font-extrabold '+OCC_TXT[col]+'">'+o.used+' / '+o.cap+'</span></div>'+
     '<div class="occ-bar"><div class="'+OCC_BG[col]+'" style="width:'+Math.min(100,o.used/o.cap*100)+'%"></div></div></div>'+
@@ -1124,7 +1149,7 @@ function openClass(classId, date){
 }
 function drawerReserve(classId, date){
   const mineR = isAdmin()?null:myStudentIds();
-  const opts = STUDENTS.filter(s=>!fixedOf(classId).includes(s)&&(!mineR||mineR.has(s.id))).map(s=>'<option value="'+s.id+'">'+s.name+' ('+groupOf(s.cls).name+')</option>').join('');
+  const opts = STUDENTS.filter(s=>!fixedOf(classId).includes(s)&&(!mineR||mineR.has(s.id))).map(s=>'<option value="'+s.id+'">'+s.name+' ('+(subjectsOf(s).map(x=>x.name).join(', ')||'—')+')</option>').join('');
   $('drawerBody').innerHTML = '<h4 class="font-bold text-slate-900 mb-1">Reservar recuperación</h4>'+
     '<p class="text-sm text-slate-500 mb-4">Clase: '+groupOf(classId).name+' · '+date+'</p>'+
     '<label class="text-xs font-semibold text-slate-500">ALUMNO</label>'+
@@ -1197,42 +1222,47 @@ function renderStudents(){
   const mine = isAdmin()?null:myStudentIds();
   const list = STUDENTS.filter(s=>{
     if(mine && !mine.has(s.id)) return false;
-    const g = groupOf(s.cls).name.toLowerCase();
+    const g = subjectsOf(s).map(x=>x.name).join(' ').toLowerCase();
     return s.name.toLowerCase().includes(q)||g.includes(q)||(isAdmin()&&s.tutor.toLowerCase().includes(q));
   });
   const nb=$('newStudentBtn'); if(nb) nb.style.display=isAdmin()?'':'none';
   $('studentCount').textContent = list.length+' alumnos · pulsa para ver su ficha completa';
   $('studentList').innerHTML = list.map(s=>{
-    const g = groupOf(s.cls); const r = RECEIPTS.find(r=>r.studentId===s.id);
+    const subs = subjectsOf(s); const g = subs[0] || {name:'—', color:'#94a3b8'}; const r = RECEIPTS.find(r=>r.studentId===s.id);
     return '<div class="card p-4 cursor-pointer hover:shadow-md transition-shadow" onclick="go(\'ficha\',\''+s.id+'\')">'+
       '<div class="flex items-center gap-3 mb-3">'+(s.photo?'<img src="'+s.photo+'" class="w-11 h-11 rounded-full object-cover shrink-0">':'<span class="w-11 h-11 rounded-full font-bold text-sm flex items-center justify-center text-white" style="background:'+g.color+'">'+initials(s.name)+'</span>')+
       '<div class="flex-1 min-w-0"><div class="font-bold text-slate-900 truncate">'+s.name+'</div>'+(isAdmin()?'<div class="text-xs text-slate-500 truncate">'+s.tutor+' ('+s.rel+')</div>':'')+'</div>'+
       (isAdmin()?(r.status==='pending'?'<span class="chip bg-amber-100 text-amber-700">pendiente cobro</span>':'<span class="chip bg-emerald-100 text-emerald-700">al día</span>'):'')+'</div>'+
-      '<div class="flex items-center gap-1.5 text-xs text-slate-500"><span class="w-2 h-2 rounded-full" style="background:'+g.color+'"></span>'+g.name+'</div></div>';
+      '<div class="flex items-center gap-1.5 text-xs text-slate-500"><span class="w-2 h-2 rounded-full shrink-0" style="background:'+g.color+'"></span><span class="truncate">'+subs.map(x=>x.name).join(' · ')+'</span></div></div>';
   }).join('') || '<p class="text-sm text-slate-400 col-span-full text-center py-8">Sin resultados.</p>';
 }
 function renderFichaLimited(id){
   const s = student(id); state.fichaId = id;
-  const g = groupOf(s.cls); const c = cls(s.cls);
+  const subs = subjectsOf(s).filter(x=>x.teacher===state.user.teacher);
+  const main = subs[0] || { color:'#94a3b8', name:'—' };
   const myExtras = EXTRAS.filter(e=>e.studentId===id);
   const att = Object.entries(ATTENDANCE).filter(([k,v])=>v[id]).slice(-8).reverse();
   $('fichaBody').innerHTML =
     '<div class="card p-5 md:p-6 mb-4"><div class="flex flex-wrap items-center gap-4">'+
-      (s.photo?'<img src="'+s.photo+'" class="w-16 h-16 rounded-2xl object-cover shadow shrink-0">':'<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>')+
+      (s.photo?'<img src="'+s.photo+'" class="w-16 h-16 rounded-2xl object-cover shadow shrink-0">':'<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+main.color+'">'+initials(s.name)+'</span>')+
       '<div class="flex-1 min-w-[200px]"><h2 class="text-xl md:text-2xl font-extrabold text-slate-900">'+s.name+'</h2>'+
-      '<div class="flex items-center gap-1.5 mt-1.5 text-sm"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+g.color+'"></span><span class="font-semibold text-slate-700">'+g.name+'</span><span class="text-slate-400">· '+c.days.map(d=>DAYN[d]).join(' y ')+' '+c.start+'–'+c.end+' · '+c.room+'</span></div>'+
+      '<div class="flex flex-wrap gap-1.5 mt-1.5">'+subs.map(x=>'<span class="chip bg-slate-100 text-slate-600 !py-1"><span class="w-2 h-2 rounded-full" style="background:'+x.color+'"></span>'+x.name+'</span>').join('')+'</div>'+
       (s.birth?'<div class="text-sm text-slate-500 mt-1">\u{1F382} Cumpleaños: '+shortDateEs(s.birth)+'</div>':'')+'</div>'+
     '</div></div>'+
+    (subs.length?'<div class="card p-5 mb-4"><h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Sus clases contigo</h3>'+
+      subs.map(x=>'<div class="flex items-center gap-2 py-1.5 border-b border-slate-50 last:border-0"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+x.color+'"></span><span class="text-sm font-semibold text-slate-700 flex-1">'+x.name+'</span><span class="text-xs text-slate-400">'+schedText(x.slots)+'</span></div>').join('')+'</div>':'')+
     '<div class="grid md:grid-cols-3 gap-4">'+
       '<div class="card p-5"><h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Asistencia reciente</h3>'+
         (att.length?'<div class="flex gap-1.5 flex-wrap">'+att.map(([k,v])=>'<span class="att-dot '+(v[id]==='present'?'bg-emerald-500':'bg-rose-500')+'" title="'+k.split('|')[0]+'"></span>').join('')+'</div><p class="text-xs text-slate-400 mt-2">Últimas '+att.length+' clases registradas</p>':'<p class="text-sm text-slate-400">Aún sin registros esta semana.</p>')+
         '<div class="mt-3 pt-3 border-t border-slate-100 text-sm"><div class="flex items-center justify-between mb-2"><span class="font-semibold text-slate-700">Créditos de recuperación</span><span class="chip bg-violet-100 text-violet-700 !text-xs !font-bold">'+(CREDITS[id]||0)+'</span></div><span class="font-semibold text-slate-700">Recuperaciones este mes:</span> '+(myExtras.length?myExtras.map(e=>'<span class="chip bg-violet-100 text-violet-700 mr-1">'+e.date.slice(8)+'/'+e.date.slice(5,7)+'</span>').join(''):'<span class="text-slate-400">ninguna</span>')+'</div></div>'+
     '</div>';
 }
+
 function renderFicha(id){
   if(!isAdmin()){ renderFichaLimited(id); return; }
   const s = student(id); state.fichaId = id;
-  const g = groupOf(s.cls); const c = cls(s.cls);
+  const subs = subjectsOf(s);
+  const main = subs[0] || { color:'#94a3b8', name:'—' };
   const r = RECEIPTS.find(r=>r.studentId===id && r.month==='2026-10');
   const hist = RECEIPTS.filter(x=>x.studentId===id).sort((a,b)=>b.month.localeCompare(a.month));
   const hTot = hist.reduce((a,x)=>a+x.total,0);
@@ -1245,17 +1275,23 @@ function renderFicha(id){
     '<div class="divide-y divide-slate-100">'+hist.map(x=>'<div class="flex items-center gap-2.5 py-2.5 text-sm"><span class="font-medium text-slate-700 flex-1">'+monthName(x.month)+'</span><span class="font-bold text-slate-900">'+x.total+' €</span>'+(x.status==='paid'?'<span class="chip bg-emerald-100 text-emerald-700">cobrado</span>':'<span class="chip bg-amber-100 text-amber-700">pendiente</span>')+'<button class="text-xs text-violet-600 font-semibold hover:underline shrink-0" onclick="openReceipt(\''+x.id+'\')">ver recibo</button></div>').join('')+'</div></div>';
   const myExtras = EXTRAS.filter(e=>e.studentId===id);
   const att = Object.entries(ATTENDANCE).filter(([k,v])=>v[id]).slice(-8).reverse();
-  const absentMsg = 'Hola '+s.tutor+', soy de Online Centro de Aprendizaje. Te escribo porque '+s.name+' no ha venido hoy a clase de '+g.name+'. ¿Está todo bien?';
+  const absentMsg = 'Hola '+s.tutor+', soy de Online Centro de Aprendizaje. Te escribo porque '+s.name+' no ha venido hoy a clase de '+main.name+'. ¿Está todo bien?';
   const payMsg = 'Hola '+s.tutor+', soy de Online Centro de Aprendizaje. Te escribo porque aún no hemos recibido el recibo de octubre de '+s.name+' ('+r.total+' €). ¿Puedes revisarlo cuando puedas? ¡Gracias!';
+  const subsCard = '<div class="card p-5 mb-4"><h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Materias ('+subs.length+')</h3>'+
+    (subs.length?subs.map(x=>{ const rooms = ROOMS.filter(rm=>(rm.subjectIds||[]).includes(x.id)).map(rm=>rm.name).join(', ')||'sin aula';
+      return '<div class="flex items-start gap-2.5 py-2 border-b border-slate-50 last:border-0"><span class="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5" style="background:'+x.color+'"></span>'+
+      '<div class="flex-1 min-w-0"><div class="text-sm font-bold text-slate-800">'+x.name+'</div>'+
+      '<div class="text-xs text-slate-400">'+schedText(x.slots)+' · '+x.teacher+' · '+rooms+'</div></div>'+
+      '<span class="text-sm font-bold text-slate-700 shrink-0">'+x.price+' €/mes</span></div>'; }).join(''):'<p class="text-sm text-slate-400">Sin materias. Edita la ficha para asignarle alguna.</p>')+'</div>';
   $('fichaBody').innerHTML =
     '<div class="card p-5 md:p-6 mb-4"><div class="flex flex-wrap items-center gap-4">'+
-      (s.photo?'<img src="'+s.photo+'" class="w-16 h-16 rounded-2xl object-cover shadow shrink-0">':'<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+g.color+'">'+initials(s.name)+'</span>')+
+      (s.photo?'<img src="'+s.photo+'" class="w-16 h-16 rounded-2xl object-cover shadow shrink-0">':'<span class="w-16 h-16 rounded-2xl font-extrabold text-xl flex items-center justify-center text-white shadow" style="background:'+main.color+'">'+initials(s.name)+'</span>')+
       '<div class="flex-1 min-w-[200px]"><h2 class="text-xl md:text-2xl font-extrabold text-slate-900">'+s.name+'</h2>'+
       '<div class="text-sm text-slate-500 mt-0.5">'+s.tutor+' ('+s.rel+') · <a class="text-violet-600 font-semibold" href="tel:'+s.phone+'">'+s.phone+'</a></div>'+
       (s.birth?'<div class="text-sm text-slate-500 mt-0.5">\u{1F382} '+fullDateEs(s.birth)+' · '+ageOf(s.birth)+' años</div>':'')+
-      '<div class="flex items-center gap-1.5 mt-1.5 text-sm"><span class="w-2.5 h-2.5 rounded-full" style="background:'+g.color+'"></span><span class="font-semibold text-slate-700">'+g.name+'</span><span class="text-slate-400">· '+DAYN[c.days[0]]+' y '+DAYN[c.days[1]]+' '+c.start+'–'+c.end+'</span></div></div>'+
+      '<div class="flex flex-wrap gap-1.5 mt-1.5">'+subs.map(x=>'<span class="chip bg-slate-100 text-slate-600 !py-1"><span class="w-2 h-2 rounded-full" style="background:'+x.color+'"></span>'+x.name+'</span>').join('')+'</div></div>'+
       '<div class="flex gap-2"><a class="btn btn-wa" target="_blank" href="'+waLink(s.phone,'Hola '+s.tutor+', soy de Online Centro de Aprendizaje.')+'">'+icon('<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>',16)+' WhatsApp</a><button class="btn btn-ghost" onclick="openStudentForm(\''+id+'\')">Editar</button></div>'+
-    '</div></div>'+
+    '</div></div>'+subsCard+
     '<div class="grid md:grid-cols-3 gap-4">'+
       '<div class="card p-5"><h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Asistencia reciente</h3>'+
         (att.length?'<div class="flex gap-1.5 flex-wrap">'+att.map(([k,v])=>'<span class="att-dot '+(v[id]==='present'?'bg-emerald-500':'bg-rose-500')+'" title="'+k.split('|')[0]+'"></span>').join('')+'</div><p class="text-xs text-slate-400 mt-2">Últimas '+att.length+' clases registradas</p>':'<p class="text-sm text-slate-400">Aún sin registros esta semana.</p>')+
@@ -1274,6 +1310,7 @@ function renderFicha(id){
         (s.notes?'<div class="mt-4 pt-3 border-t border-slate-100"><div class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Observaciones</div><p class="text-sm text-slate-600">'+s.notes+'</p></div>':'')+'</div>'+
     '</div>'+statsCard;
 }
+
 function markReminded(rid){
   const r = RECEIPTS.find(r=>r.id===rid);
   r.remindedAt = 'ahora mismo';
@@ -1285,14 +1322,16 @@ function openStudentForm(editId){
   attRerender = null;
   const s = editId ? student(editId) : null;
   studentPhoto = s && s.photo ? s.photo : null;
+  studentSubjects = s ? (s.subjects||[]).slice() : [];
   $('drawerTitle').textContent = s ? 'Editar alumno' : 'Nuevo alumno';
-  const classOpts = CLASSES.map(c=>'<option value="'+c.id+'"'+(s&&s.cls===c.id?' selected':'')+'>'+groupOf(c.id).name+' · '+DAYN[c.days[0]]+'/'+DAYN[c.days[1]]+' '+c.start+'</option>').join('');
   const relOpts = ['madre','padre','tutor legal'].map(r=>'<option'+(s&&s.rel===r?' selected':'')+'>'+r+'</option>').join('');
   $('drawerBody').innerHTML =
     '<label class="text-xs font-semibold text-slate-500">NOMBRE DEL ALUMNO</label>'+
     '<input id="sfName" value="'+(s?s.name.replace(/"/g,'&quot;'):'')+'" placeholder="Ej. María López" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
-    '<label class="text-xs font-semibold text-slate-500">CLASE / GRUPO</label>'+
-    '<select id="sfClass" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+classOpts+'</select>'+
+    '<label class="text-xs font-semibold text-slate-500">MATERIAS</label>'+
+    '<div class="flex gap-2 mt-1 mb-2"><select id="sfSubjSel" class="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2.5 bg-white"></select>'+
+    '<button class="btn btn-soft !py-2 shrink-0" onclick="sfAddSubject()">Añadir</button></div>'+
+    '<div id="sfSubjChips" class="flex flex-wrap gap-1.5 mb-3"></div>'+
     '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-semibold text-slate-500">TUTOR</label>'+
     '<input id="sfTutor" value="'+(s?s.tutor.replace(/"/g,'&quot;'):'')+'" placeholder="Ej. Carmen López" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white"></div>'+
     '<div><label class="text-xs font-semibold text-slate-500">PARENTESCO</label>'+
@@ -1309,32 +1348,32 @@ function openStudentForm(editId){
     '<button class="btn btn-primary w-full justify-center !py-3" onclick="saveStudent(\''+(editId||'')+'\')">Guardar</button>'+
     (s&&isAdmin()?'<button class="text-xs text-rose-400 hover:underline mt-4" onclick="deleteStudent(\''+editId+'\')">Eliminar alumno</button>':'');
   renderStuPhotoBox();
+  renderSfSubjects();
   openDrawer();
 }
 function saveStudent(editId){
-  const name=$('sfName').value.trim(), tutor=$('sfTutor').value.trim(), phone=$('sfPhone').value.replace(/\D/g,''), classId=$('sfClass').value;
+  const name=$('sfName').value.trim(), tutor=$('sfTutor').value.trim(), phone=$('sfPhone').value.replace(/\D/g,'');
   if(!name||!tutor||phone.length<9){ toast('Completa nombre, tutor y un móvil válido.', false); return; }
+  if(!studentSubjects.length){ toast('Elige al menos una materia.', false); return; }
   if(!editId && !$('sfConsent').checked){ toast('Falta el consentimiento RGPD.', false); return; }
+  const base = studentSubjects.map(subj).filter(Boolean).reduce((a,x)=>a+x.price,0);
   if(editId){
     const s = student(editId);
-    const oldCls = s.cls;
-    Object.assign(s, { name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, photo:studentPhoto, notes:$('sfNotes').value.trim() });
-    if(oldCls!==classId){
-      const r = RECEIPTS.find(r=>r.studentId===editId && r.month==='2026-10');
-      if(r){ const nb = GROUPS[CLASSES.find(c=>c.id===classId).group].price; r.total = r.total - r.base + nb; r.base = nb; }
-    }
+    Object.assign(s, { name, tutor, rel:$('sfRel').value, phone, subjects:studentSubjects.slice(), birth:$('sfBirth').value||null, photo:studentPhoto, notes:$('sfNotes').value.trim() });
+    const r = RECEIPTS.find(r=>r.studentId===editId && r.month==='2026-10');
+    if(r){ r.total = r.total - r.base + base; r.base = base; }
     toast('Alumno actualizado.');
     closeDrawer(); go('ficha', editId);
   } else {
     const id = 's'+Date.now();
-    STUDENTS.push({ id, name, tutor, rel:$('sfRel').value, phone, cls:classId, birth:$('sfBirth').value||null, photo:studentPhoto, notes:$('sfNotes').value.trim() });
-    const base = GROUPS[CLASSES.find(c=>c.id===classId).group].price;
+    STUDENTS.push({ id, name, tutor, rel:$('sfRel').value, phone, subjects:studentSubjects.slice(), birth:$('sfBirth').value||null, photo:studentPhoto, notes:$('sfNotes').value.trim() });
     RECEIPTS.push({ id:'r'+id, studentId:id, month:'2026-10', base, extras:0, total:base, status:'pending', remindedAt:null });
     CREDITS[id]=0;
     toast(name+' dado de alta, con su recibo de octubre.');
     closeDrawer(); go('ficha', id);
   }
 }
+
 function deleteStudent(id){
   const s = student(id);
   if(!confirm('¿Eliminar a '+s.name+' y todos sus datos?')) return;
@@ -1380,7 +1419,7 @@ function renderAttendance(){
     }).join('');
     const absentFixed = fixed.filter(s=>rec[s.id]==='absent');
     return '<div class="card p-5"><div class="flex items-center gap-2 mb-1"><span class="w-2.5 h-2.5 rounded-full" style="background:'+g.color+'"></span>'+
-      '<h3 class="font-bold text-slate-900">'+g.name+'</h3><span class="text-xs text-slate-400 ml-auto">'+c.start+'–'+c.end+' · '+c.room+'</span></div>'+
+      '<h3 class="font-bold text-slate-900">'+g.name+'</h3><span class="text-xs text-slate-400 ml-auto">'+slotOf(c, dayNum).start+'–'+slotOf(c, dayNum).end+' · '+c.room+'</span></div>'+
       '<div class="text-xs text-slate-500 mb-3">'+done+'/'+all.length+' marcados</div>'+rows+
       (absentFixed.length?'<div class="mt-4 pt-3 border-t border-slate-100"><div class="text-xs font-bold uppercase tracking-wide text-rose-500 mb-2">Faltan '+absentFixed.length+' · avisar a los padres</div><div class="flex flex-wrap gap-2">'+
         absentFixed.map(s=>{ const msg='Hola '+s.tutor+', soy de Online Centro de Aprendizaje. Te escribo porque '+s.name+' no ha venido hoy a clase de '+g.name+'. ¿Está todo bien?';
@@ -1430,8 +1469,9 @@ function openPastParte(classId, date){
   const key = date+'|'+classId;
   const rec = ATTENDANCE[key]||{};
   const p = PARTES[key];
-  const all = STUDENTS.filter(s=>s.cls===classId);
+  const all = fixedOf(classId);
   const dd = new Date(date+'T12:00');
+  const sl = slotOf(c, dd.getDay());
   const rows = all.map(s=>{
     const v = rec[s.id];
     return '<div class="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0">'+
@@ -1442,13 +1482,14 @@ function openPastParte(classId, date){
   $('drawerTitle').textContent = 'Parte · '+DAYN_L[dd.getDay()]+' '+dd.getDate()+'/'+(dd.getMonth()+1);
   $('drawerBody').innerHTML =
     '<div class="flex items-center gap-2 mb-1"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+g.color+'"></span><h4 class="font-bold text-slate-900">'+g.name+'</h4></div>'+
-    '<p class="text-sm text-slate-500 mb-4">'+c.start+'–'+c.end+' · '+c.room+' · '+c.teacher+'</p>'+
+    '<p class="text-sm text-slate-500 mb-4">'+sl.start+'–'+sl.end+' · '+c.room+' · '+c.teacher+'</p>'+
     (p&&p.closedAt?'<div class="mb-3"><span class="chip bg-slate-100 text-slate-500">Parte cerrado'+(p.closedAt?' · '+p.closedAt.slice(11,16):'')+(p.auto?' (auto)':'')+'</span></div>':'')+
     '<div class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Asistencia ('+all.length+')</div>'+rows+
     '<div class="text-xs font-bold uppercase tracking-wide text-slate-400 mt-4 mb-2">Observaciones</div>'+
     (p&&p.comment?'<p class="text-sm text-slate-600 bg-slate-50 border border-slate-100 rounded-xl p-3">'+p.comment.replace(/</g,'&lt;')+'</p>':'<p class="text-xs text-slate-300 italic">Sin observaciones registradas.</p>');
   openDrawer();
 }
+
 function openAttDrawer(classId, date){
   const c = cls(classId); const g = groupOf(c.id);
   attRerender = ()=>openAttDrawer(classId, date);
@@ -1458,31 +1499,37 @@ function openAttDrawer(classId, date){
   $('drawerBody').innerHTML =
     '<div class="flex items-center gap-2 mb-1"><span class="w-2.5 h-2.5 rounded-full" style="background:'+g.color+'"></span>'+
     '<h4 class="font-bold text-slate-900">'+g.name+'</h4></div>'+
-    '<p class="text-sm text-slate-500 mb-4">'+DAYN_L[new Date(date+'T12:00').getDay()]+' · '+c.start+'–'+c.end+' · '+c.room+' · '+c.teacher+'</p>'+
+    '<p class="text-sm text-slate-500 mb-4">'+DAYN_L[new Date(date+'T12:00').getDay()]+' · '+slotOf(c, new Date(date+'T12:00').getDay()).start+'–'+slotOf(c, new Date(date+'T12:00').getDay()).end+' · '+c.room+' · '+c.teacher+'</p>'+
     '<div class="text-xs font-semibold text-slate-500 mb-2">'+L.done+'/'+L.total+' marcados</div>'+
     L.rows + L.alertBox + _parte;
   openDrawer();
 }
 /* chips de horario del aula: agrupa días consecutivos con el mismo horario */
-function slotChips(room){
-  const slots = room.slots.slice().sort((a,b)=>a.day-b.day);
-  if(!slots.length) return '';
+function slotChips(slots){
+  if(!slots || !slots.length) return '';
   const groups = [];
-  slots.forEach(s=>{
+  slots.slice().sort((a,b)=>a.day-b.day).forEach(s=>{
     const last = groups[groups.length-1];
-    if(last && last.start===s.start && last.end===s.end && s.day===last.days[last.days.length-1]+1){
-      last.days.push(s.day);
-    } else {
-      groups.push({days:[s.day], start:s.start, end:s.end});
-    }
+    if(last && last.start===s.start && last.end===s.end && s.day===last.days[last.days.length-1]+1) last.days.push(s.day);
+    else groups.push({days:[s.day], start:s.start, end:s.end});
   });
   return '<div class="flex flex-wrap gap-1.5 mb-2.5">'+groups.map(g=>{
     const dl = g.days.length>1 ? DAYN[g.days[0]]+'–'+DAYN[g.days[g.days.length-1]] : DAYN[g.days[0]];
     return '<span class="chip bg-violet-50 text-violet-700 !py-1.5 !px-3" style="white-space:nowrap">'+dl+' · '+g.start+'–'+g.end+'</span>';
   }).join('')+'</div>';
 }
+
 /* ---------- foto de alumno ---------- */
 let studentPhoto = null;
+let studentSubjects = [];
+function renderSfSubjects(){
+  const sel = $('sfSubjSel'); if(!sel) return;
+  sel.innerHTML = SUBJECTS.filter(x=>!studentSubjects.includes(x.id)).map(x=>'<option value="'+x.id+'">'+x.name+' · '+x.price+' €</option>').join('') || '<option value="">Sin más materias</option>';
+  $('sfSubjChips').innerHTML = studentSubjects.map(id=>{ const x=subj(id); if(!x) return '';
+    return '<span class="chip bg-violet-100 text-violet-700 !py-1.5 font-semibold"><span class="w-2 h-2 rounded-full" style="background:'+x.color+'"></span>'+x.name+'<button class="ml-1 font-bold" onclick="sfRemoveSubject(\''+id+'\')">×</button></span>'; }).join('') || '<span class="text-xs text-slate-300 italic">Ninguna materia elegida</span>';
+}
+function sfAddSubject(){ const v=$('sfSubjSel').value; if(v && !studentSubjects.includes(v)){ studentSubjects.push(v); renderSfSubjects(); } }
+function sfRemoveSubject(id){ studentSubjects = studentSubjects.filter(x=>x!==id); renderSfSubjects(); }
 function stuPhoto(input){
   const f = input.files && input.files[0]; if(!f) return;
   const rd = new FileReader();
@@ -1499,7 +1546,7 @@ function renderStuPhotoBox(){
 }
 function stuAvatar(s, size, extra){
   if(s.photo) return '<img src="'+s.photo+'" class="'+size+' object-cover shrink-0 '+(extra||'')+'" alt="">';
-  return '<span class="'+size+' font-bold flex items-center justify-center text-white shrink-0 '+(extra||'')+'" style="background:'+groupOf(s.cls).color+'">'+initials(s.name)+'</span>';
+  return '<span class="'+size+' font-bold flex items-center justify-center text-white shrink-0 '+(extra||'')+'" style="background:'+((subjectsOf(s)[0]||{}).color||'#94a3b8')+'">'+initials(s.name)+'</span>';
 }
 /* ---------- cumpleaños ---------- */
 function isBirthdayToday(s){ if(!s||!s.birth) return false; const b=new Date(s.birth+'T12:00'), n=new Date(); return b.getMonth()===n.getMonth()&&b.getDate()===n.getDate(); }
@@ -1508,7 +1555,7 @@ function fullDateEs(ds){ const m=['enero','febrero','marzo','abril','mayo','juni
 function shortDateEs(ds){ const m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']; const d=new Date(ds+'T12:00'); return d.getDate()+' '+m[d.getMonth()]; }
 function renderNotifs(list){
   const b = list.filter(isBirthdayToday);
-  $('notifs').innerHTML = b.length ? b.map(s=>'<div class="flex gap-3 items-start"><span class="text-xl shrink-0">\u{1F382}</span><div><div class="text-sm font-bold text-slate-800">Hoy es el cumpleaños de '+s.name+'</div><div class="text-xs text-slate-500">Cumple '+ageOf(s.birth)+' años · '+groupOf(s.cls).name+'</div></div></div>').join('')
+  $('notifs').innerHTML = b.length ? b.map(s=>'<div class="flex gap-3 items-start"><span class="text-xl shrink-0">\u{1F382}</span><div><div class="text-sm font-bold text-slate-800">Hoy es el cumpleaños de '+s.name+'</div><div class="text-xs text-slate-500">Cumple '+ageOf(s.birth)+' años · '+((subjectsOf(s)[0]||{name:''}).name)+'</div></div></div>').join('')
     : '<p class="text-sm text-slate-400">Sin notificaciones hoy.</p>';
 }
 function renderAulas(){
@@ -1524,14 +1571,23 @@ function renderAulas(){
   if(!isAdmin()){ const tn=new Set(myClasses().map(c=>c.room)); rooms=rooms.filter(r=>tn.has(r.name)); }
   const nb=$('newRoomBtn'); if(nb) nb.style.display=isAdmin()?'':'none';
   $('aulaRooms').innerHTML = rooms.map(room=>{
-    const dayClasses = myClasses().filter(c=>c.room===room.name && c.days.includes(dayNum)).sort((a,b)=>a.start<b.start?-1:1);
+    const roomClasses = CLASSES.filter(c=>c.room===room.name);
+    const teachers = [...new Set(roomClasses.map(c=>c.teacher))];
+    const stuCount = new Set(roomClasses.flatMap(c=>fixedOf(c.id).map(s=>s.id))).size;
+    const subsHTML = (room.subjectIds||[]).map(sid=>{ const s=subj(sid); if(!s) return '';
+      return '<div class="flex items-start gap-2 py-1.5 border-b border-slate-50 last:border-0">'+
+        '<span class="w-2.5 h-2.5 rounded-full shrink-0 mt-1" style="background:'+s.color+'"></span>'+
+        '<div class="flex-1 min-w-0"><div class="text-sm font-semibold text-slate-700">'+s.name+'</div>'+
+        '<div class="text-xs text-slate-400">'+s.teacher+' · '+schedText(s.slots)+'</div></div></div>';
+    }).join('');
+    const dayClasses = myClasses().filter(c=>c.room===room.name && c.days.includes(dayNum)).sort((a,b)=>slotOf(a,dayNum).start<slotOf(b,dayNum).start?-1:1);
     const slots = dayClasses.map(c=>{
-      const g = groupOf(c.id); const o = occupancy(c.id, state.aulaDate);
+      const g = groupOf(c.id); const o = occupancy(c.id, state.aulaDate); const sl = slotOf(c, dayNum);
       const key = state.aulaDate+'|'+c.id; const rec = ATTENDANCE[key]||{};
       const total = fixedOf(c.id).length + extrasOf(c.id, state.aulaDate).length;
       const done = Object.keys(rec).length; const full = total>0 && done>=total;
       return '<div class="classblock border rounded-xl p-4 mb-2.5 '+(full?'!border-violet-300 bg-violet-50/50':'bg-white border-slate-200')+'" onclick="openAttDrawer(\''+c.id+'\',\''+state.aulaDate+'\')">'+
-        '<div class="flex items-center justify-between mb-1.5"><span class="text-sm font-extrabold text-slate-800">'+c.start+' – '+c.end+'</span>'+
+        '<div class="flex items-center justify-between mb-1.5"><span class="text-sm font-extrabold text-slate-800">'+sl.start+' – '+sl.end+'</span>'+
         (full?'<span class="chip bg-violet-100 text-violet-700">LISTA PASADA</span>':'<span class="chip bg-slate-100 text-slate-500">PASAR LISTA →</span>')+'</div>'+
         '<div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full" style="background:'+g.color+'"></span><span class="text-sm font-semibold text-slate-700">'+g.name+'</span></div>'+
         '<div class="text-xs text-slate-400 mt-1">'+c.teacher+' · '+o.used+'/'+o.cap+' plazas</div>'+
@@ -1541,12 +1597,12 @@ function renderAulas(){
       '<h3 class="font-bold text-slate-900">'+room.name+'</h3>'+
       (isAdmin()?'<button class="text-xs text-violet-600 font-semibold hover:underline ml-auto shrink-0" onclick="openRoomForm(\''+room.name.replace(/'/g,"\\'")+'\')">Editar</button>':'')+'</div>'+
       (room.desc?'<p class="text-xs text-slate-500 mb-2.5">'+room.desc+'</p>':'')+
-      ((room.teachers&&room.teachers.length)?'<div class="flex flex-wrap gap-1.5 mb-2.5">'+room.teachers.map(t=>'<span class="chip bg-slate-100 text-slate-500 !py-1">'+t+'</span>').join('')+'</div>':'')+
-      (room.slots.length?slotChips(room):'')+
-      (room.studentIds.length?'<div class="text-xs text-slate-400 mb-3">'+room.studentIds.length+' alumnos</div>':'')+
-      '<div class="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-2">Clases del día · pasar lista</div>'+
-      (slots || '<p class="text-xs text-slate-300 italic py-2">Sin clases este día.</p>')+'</div>';
-  }).join('');
+      (teachers.length?'<div class="flex flex-wrap gap-1.5 mb-2.5">'+teachers.map(t=>'<span class="chip bg-slate-100 text-slate-500 !py-1">'+t+'</span>').join('')+'</div>':'')+
+      (subsHTML?'<div class="mb-2.5">'+subsHTML+'</div>':'<p class="text-xs text-slate-300 italic mb-2.5">Sin materias asignadas.</p>')+
+      '<div class="text-xs text-slate-400 mb-3">'+stuCount+' alumnos</div>'+
+      '<div class="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-2">Clases del día · pasar lista</div>'+slots+
+      '</div>';
+  }).join('') || '<p class="text-sm text-slate-400">Sin aulas.</p>';
 }
 
 /* ---------- AULAS: crear, editar, eliminar ---------- */
@@ -1555,93 +1611,73 @@ function openRoomForm(editName){
   attRerender = null;
   const r = editName ? ROOMS.find(x=>x.name===editName) : null;
   roomDraft = r
-    ? { editName, name:r.name, desc:r.desc||'', teachers:(r.teachers||[]).slice(), studentIds:r.studentIds.slice(), slots:r.slots.map(s=>({day:s.day,start:s.start,end:s.end})) }
-    : { editName:null, name:'', desc:'', teachers:[], studentIds:[], slots:[] };
-  $('drawerTitle').textContent = r ? 'Editar aula' : 'Nueva aula';
+    ? { editName, name:r.name, desc:r.desc||'', subjectIds:(r.subjectIds||[]).slice() }
+    : { editName:null, name:'', desc:'', subjectIds:[] };
   renderRoomForm();
   openDrawer();
 }
 function renderRoomForm(){
   const d = roomDraft;
-  const used = d.editName ? CLASSES.filter(c=>c.room===d.editName).length : 0;
-  const dayRows = [1,2,3,4,5].map(dn=>{
-    const sl = d.slots.find(s=>s.day===dn);
-    const on = !!sl;
-    return '<div class="flex items-center gap-2 py-1.5">'+
-      '<button onclick="roomToggleDay('+dn+')" class="chip !py-1.5 shrink-0 font-bold" style="width:86px;justify-content:center;'+(on?'background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff':'background:#f1f5f9;color:#94a3b8')+'">'+DAYN[dn]+'</button>'+
-      (on?'<input type="time" value="'+sl.start+'" onchange="roomSlotTime('+dn+',\'start\',this.value)" class="text-sm border border-slate-200 rounded-lg px-2 py-1.5 bg-white" style="width:108px">'+
-           '<span class="text-slate-300">\u2013</span>'+
-           '<input type="time" value="'+sl.end+'" onchange="roomSlotTime('+dn+',\'end\',this.value)" class="text-sm border border-slate-200 rounded-lg px-2 py-1.5 bg-white" style="width:108px">'
-         :'<span class="text-xs text-slate-300 italic">sin clases</span>')+'</div>';
-  }).join('');
-  const addedOpts = STUDENTS.filter(s=>!d.studentIds.includes(s.id)).map(s=>'<option value="'+s.id+'">'+s.name+'</option>').join('');
-  const addedChips = d.studentIds.map(id=>{ const s=student(id); return s?'<span class="chip bg-violet-100 text-violet-700 !py-1">'+s.name+' <button class="ml-1 font-bold" onclick="roomRemoveStudent(\''+id+'\')">\u2715</button></span>':''; }).join('');
+  $('drawerTitle').textContent = d.editName ? 'Editar aula' : 'Nueva aula';
   $('drawerBody').innerHTML =
-    '<label class="text-xs font-semibold text-slate-500">NOMBRE DEL AULA</label>'+
+    '<label class="text-xs font-semibold text-slate-500">NOMBRE</label>'+
     '<input id="rmName" value="'+d.name.replace(/"/g,'&quot;')+'" placeholder="Ej. Aula 3" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
-    '<label class="text-xs font-semibold text-slate-500">DESCRIPCI\u00D3N</label>'+
-    '<textarea id="rmDesc" rows="2" placeholder="Ej. Aula grande con pizarra digital\u2026" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+d.desc.replace(/</g,'&lt;')+'</textarea>'+
-    '<label class="text-xs font-semibold text-slate-500">PROFESORES DEL AULA</label>'+
-    '<div class="flex flex-wrap gap-1.5 mt-1 mb-1">'+[...new Set(CLASSES.map(c=>c.teacher))].map(t=>'<button onclick="roomToggleTeacher(\''+t.replace(/'/g,"\\'")+'\')" class="chip !py-1.5 font-bold" style="'+(d.teachers.includes(t)?'background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff':'background:#f1f5f9;color:#94a3b8')+'">'+t+'</button>').join('')+'</div>'+
-    '<p class="text-xs text-slate-400 mb-4">Los profesores asignados ver\u00E1n las clases de este aula al entrar.</p>'+
-    '<label class="text-xs font-semibold text-slate-500">D\u00CDAS Y HORAS DE CLASE</label><div class="mt-1 mb-3">'+dayRows+'</div>'+
-    '<label class="text-xs font-semibold text-slate-500">ALUMNOS DEL AULA</label>'+
-    '<div class="flex gap-2 mt-1 mb-2"><select id="rmStudentSel" class="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2.5 bg-white">'+addedOpts+'</select>'+
-    '<button class="btn btn-soft shrink-0" onclick="roomAddStudent()">A\u00F1adir</button></div>'+
-    '<div class="flex flex-wrap gap-1.5 mb-4">'+(addedChips||'<span class="text-xs text-slate-300 italic">Ning\u00FAn alumno asignado.</span>')+'</div>'+
-    (d.editName?'<p class="text-xs text-slate-400 mb-4">'+used+' clase(s) usan este aula. Al renombrar se actualizan todas.</p>':'')+
-    '<button class="btn btn-primary w-full justify-center !py-3" onclick="saveRoom()">Guardar</button>'+
+    '<label class="text-xs font-semibold text-slate-500">DESCRIPCIÓN</label>'+
+    '<textarea id="rmDesc" rows="2" placeholder="Ej. Aula grande con pizarra digital…" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+d.desc.replace(/</g,'&lt;')+'</textarea>'+
+    '<label class="text-xs font-semibold text-slate-500">MATERIAS QUE SE IMPARTEN</label>'+
+    '<div class="space-y-1.5 mt-1 mb-2">'+SUBJECTS.map(s=>{
+      const on = d.subjectIds.includes(s.id);
+      return '<button onclick="roomToggleSubject(\''+s.id+'\')" class="w-full text-left border rounded-xl px-3 py-2.5 '+(on?'border-violet-300 bg-violet-50':'border-slate-200 bg-white')+'">'+
+        '<span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+s.color+'"></span>'+
+        '<span class="text-sm font-semibold text-slate-700 flex-1">'+s.name+'</span>'+
+        '<span class="text-sm font-bold '+(on?'text-violet-600':'text-slate-200')+'">'+(on?'✓':'')+'</span></span>'+
+        '<span class="block text-xs text-slate-400 mt-0.5" style="margin-left:18px">'+s.teacher+' · '+schedText(s.slots)+'</span></button>';
+    }).join('')+'</div>'+
+    '<p class="text-xs text-slate-400 mb-4">El horario y el profesor vienen de cada materia (sección Materias).</p>'+
+    '<button class="btn btn-primary w-full justify-center !py-3" onclick="saveRoom()">Guardar aula</button>'+
     (d.editName?'<button class="text-xs text-rose-400 hover:underline mt-4" onclick="deleteRoom(\''+d.editName.replace(/'/g,"\\'")+'\')">Eliminar aula</button>':'');
 }
-function roomToggleDay(dn){
-  const i = roomDraft.slots.findIndex(s=>s.day===dn);
-  if(i>=0) roomDraft.slots.splice(i,1);
-  else roomDraft.slots.push({day:dn, start:'17:00', end:'18:30'});
-  renderRoomForm();
-}
-function roomToggleTeacher(t){
-  const i = roomDraft.teachers.indexOf(t);
-  if(i>=0) roomDraft.teachers.splice(i,1); else roomDraft.teachers.push(t);
-  renderRoomForm();
-}
-function roomSlotTime(dn, k, v){
-  const sl = roomDraft.slots.find(s=>s.day===dn);
-  if(sl) sl[k]=v;
-}
-function roomAddStudent(){
-  const id = $('rmStudentSel').value;
-  if(id && !roomDraft.studentIds.includes(id)) roomDraft.studentIds.push(id);
-  renderRoomForm();
-}
-function roomRemoveStudent(id){
-  roomDraft.studentIds = roomDraft.studentIds.filter(x=>x!==id);
+function roomToggleSubject(id){
+  const i = roomDraft.subjectIds.indexOf(id);
+  if(i>=0) roomDraft.subjectIds.splice(i,1); else roomDraft.subjectIds.push(id);
+  roomDraft.name = $('rmName').value; roomDraft.desc = $('rmDesc').value;
   renderRoomForm();
 }
 function saveRoom(){
   const d = roomDraft;
   const name = $('rmName').value.trim();
-  d.desc = $('rmDesc').value.trim();
-  if(!name){ toast('Ponle un nombre al aula.', false); return; }
+  d.desc = $('rmDesc').value;
+  if(!name){ toast('El aula necesita un nombre.', false); return; }
+  if(ROOMS.some(r=>r.name===name && r.name!==d.editName)){ toast('Ya existe un aula con ese nombre.', false); return; }
   if(d.editName){
-    if(name!==d.editName && ROOMS.some(r=>r.name===name)){ toast('Ya existe un aula con ese nombre.', false); return; }
     const r = ROOMS.find(x=>x.name===d.editName);
-    r.name = name; r.desc = d.desc; r.teachers = d.teachers.slice();
-    r.studentIds = d.studentIds.slice();
-    r.slots = d.slots.map(s=>({day:s.day,start:s.start,end:s.end}));
-    CLASSES.forEach(c=>{ if(c.room===d.editName) c.room = name; });
+    const oldIds = CLASSES.filter(c=>c.room===r.name).map(c=>({old:c.id, sid:c.subjectId}));
+    r.desc = d.desc; r.subjectIds = d.subjectIds.slice();
+    if(r.name!==name){
+      r.name = name;
+      rebuildClasses();
+      oldIds.forEach(({old,sid})=>{
+        const nw = sid+'__'+name;
+        Object.keys(ATTENDANCE).forEach(k=>{ if(k.endsWith('|'+old)){ ATTENDANCE[k.slice(0,k.length-old.length)+nw] = ATTENDANCE[k]; delete ATTENDANCE[k]; } });
+        Object.keys(PARTES).forEach(k=>{ if(k.endsWith('|'+old)){ PARTES[k.slice(0,k.length-old.length)+nw] = PARTES[k]; delete PARTES[k]; } });
+        EXTRAS.forEach(e=>{ if(e.classId===old) e.classId=nw; });
+        WAITLIST.forEach(w=>{ if(w.classId===old) w.classId=nw; });
+      });
+    } else rebuildClasses();
     toast('Aula actualizada.');
   } else {
-    if(ROOMS.some(r=>r.name===name)){ toast('Ya existe un aula con ese nombre.', false); return; }
-    ROOMS.push({ name, desc:d.desc, teachers:d.teachers.slice(), studentIds:d.studentIds.slice(), slots:d.slots.map(s=>({day:s.day,start:s.start,end:s.end})) });
-    toast('Aula \u00AB'+name+'\u00BB creada.');
+    ROOMS.push({ name, desc:d.desc, subjectIds:d.subjectIds.slice() });
+    rebuildClasses();
+    toast('Aula creada.');
   }
   closeDrawer(); renderAulas();
 }
 function deleteRoom(name){
-  if(CLASSES.some(c=>c.room===name)){ toast('No se puede eliminar: tiene clases asignadas.', false); return; }
-  if(!confirm('\u00BFEliminar el aula \u00AB'+name+'\u00BB?')) return;
+  if(!confirm('¿Eliminar el aula «'+name+'»? Sus clases dejarán de aparecer (las materias no se borran).')) return;
   ROOMS = ROOMS.filter(r=>r.name!==name);
-  closeDrawer(); renderAulas(); toast('Aula eliminada.');
+  rebuildClasses();
+  closeDrawer(); renderAulas();
+  toast('Aula eliminada.');
 }
 
 /* ---------- USUARIOS ---------- */
@@ -1725,13 +1761,13 @@ function renderBilling(){
   let list = all.slice().sort((a,b)=> (a.status===b.status?0:(a.status==='pending'?-1:1)));
   if(state.billFilter!=='all') list = list.filter(r=>r.status===state.billFilter);
   $('billList').innerHTML = list.map(r=>{
-    const s = student(r.studentId); const g = groupOf(s.cls);
+    const s = student(r.studentId); const subs = subjectsOf(s); const g = subs[0] || {name:'—', color:'#94a3b8'};
     const msg = 'Hola '+s.tutor+', soy de Online Centro de Aprendizaje. Te escribo porque aún no hemos recibido el recibo de octubre de '+s.name+' ('+r.total+' €). ¿Puedes revisarlo cuando puedas? ¡Gracias!';
     return '<div class="p-4 flex flex-wrap items-center gap-3">'+
       '<div class="flex items-center gap-3 flex-1 min-w-[140px] cursor-pointer" onclick="go(\'ficha\',\''+s.id+'\')">'+
       '<span class="w-10 h-10 rounded-full text-xs font-bold flex items-center justify-center text-white shrink-0" style="background:'+g.color+'">'+initials(s.name)+'</span>'+
       '<div class="flex-1 min-w-0"><div class="font-bold text-slate-900 text-sm hover:text-violet-600 hover:underline">'+s.name+'</div>'+
-      '<div class="text-xs text-slate-500">'+g.name+(r.extras?' · +'+r.extras+' € extras':'')+(r.remindedAt?' · <span class="text-violet-500 font-medium">recordado '+r.remindedAt+'</span>':'')+'</div></div></div>'+
+      '<div class="text-xs text-slate-500">'+subs.map(x=>x.name).join(' · ')+(r.extras?' · +'+r.extras+' € extras':'')+(r.remindedAt?' · <span class="text-violet-500 font-medium">recordado '+r.remindedAt+'</span>':'')+'</div></div></div>'+
       '<div class="font-extrabold text-slate-900">'+r.total+' €</div>'+
       '<button class="btn btn-ghost !py-2" onclick="openReceipt(\''+r.id+'\')">Recibo</button>'+
       (r.status==='paid'
@@ -1753,11 +1789,13 @@ function receiptNum(r){
   return r.month+'-'+String(same.findIndex(x=>x.id===r.id)+1).padStart(3,'0');
 }
 function receiptLines(r){
-  const g = groupOf(student(r.studentId).cls);
-  const L = [['Cuota '+monthName(r.month)+' · '+g.name, r.base+' €']];
+  const s = student(r.studentId);
+  const subs = subjectsOf(s);
+  const L = subs.length ? subs.map(x=>['Cuota '+monthName(r.month)+' · '+x.name, x.price+' €']) : [['Cuota '+monthName(r.month), r.base+' €']];
   if(r.extras) L.push(['Recuperaciones ('+(r.extras/EXTRA_PRICE)+')', r.extras+' €']);
   return L;
 }
+
 function openReceipt(rid){
   const r = RECEIPTS.find(x=>x.id===rid); const s = student(r.studentId);
   attRerender = null;
@@ -1845,14 +1883,13 @@ function botThink(text){
   const dayMap = { lunes:1, martes:2, miercoles:3, jueves:4, viernes:5 };
   // 1) precios
   if(/precio|cuesta|cuanto|tarifa|vale/.test(t)){
-    const prices = Object.values(GROUPS).map(g=>g.name+': <b>'+g.price+' €/mes</b>').join('<br>');
+    const prices = SUBJECTS.map(g=>g.name+': <b>'+g.price+' €/mes</b>').join('<br>');
     return chatBot('Claro, estos son nuestros precios:<br>'+prices+'<br>Cada falta avisada genera <b>1 crédito de recuperación</b> para otra clase. Sin crédito, la clase de repaso cuesta '+EXTRA_PRICE+' €.');
   }
   // 2) horarios
   if(/horario/.test(t)){
-    const g = groupOf(s.cls);
-    const lines = CLASSES.map(c=>groupOf(c.id).name+': '+c.days.map(d=>DAYN[d]).join(' y ')+' '+c.start+'–'+c.end).join('<br>');
-    return chatBot(s.name.split(' ')[0]+' está en <b>'+g.name+'</b>.<br><br>Horarios generales:<br>'+lines);
+    const lines = SUBJECTS.map(x=>x.name+': '+schedText(x.slots)).join('<br>');
+    return chatBot(s.name.split(' ')[0]+' está en <b>'+subjectsOf(s).map(x=>x.name).join(' y ')+'</b>.<br><br>Horarios generales:<br>'+lines);
   }
   // 3) plaza para un día
   const dayHit = Object.keys(dayMap).find(d=>t.includes(d));
@@ -1861,7 +1898,7 @@ function botThink(text){
     const dayClasses = CLASSES.filter(c=>c.days.includes(dn));
     if(!dayClasses.length) return chatBot('Ese día no tenemos clases. ¿Te viene bien otro día?');
     // preferir clase del mismo grupo del alumno si la hay ese día
-    let c = dayClasses.find(c=>c.group===cls(s.cls).group) || dayClasses[0];
+    let c = dayClasses.find(c=>(s.subjects||[]).includes(c.subjectId)) || dayClasses[0];
     // si el alumno ya es fijo de esa clase ese día, buscar otra
     const o = occupancy(c.id, date);
     const g = groupOf(c.id);
@@ -1871,7 +1908,7 @@ function botThink(text){
       const extra = cr>0
         ? '<br>'+s.name.split(' ')[0]+' tiene <b>'+cr+' crédito'+(cr>1?'s':'')+' de recuperación</b>: esta clase le sale gratis.'
         : '<br>Sin créditos disponibles: se sumarían <b>'+EXTRA_PRICE+' €</b> al recibo.';
-      return chatBot('¡Buena noticia! Quedan <b>'+(o.cap-o.used)+' plazas</b> en '+g.name+' el '+dayHit+' ('+c.start+'–'+c.end+').'+extra+'<br>¿Te la reservo?', btn);
+      return chatBot('¡Buena noticia! Quedan <b>'+(o.cap-o.used)+' plazas</b> en '+g.name+' el '+dayHit+' ('+slotOf(c, dn).start+'–'+slotOf(c, dn).end+').'+extra+'<br>¿Te la reservo?', btn);
     } else {
       const pos = WAITLIST.filter(w=>w.classId===c.id&&w.date===date).length + 1;
       const btn = '<button class="btn btn-soft !py-1.5 !text-xs" onclick="botJoinWaitlist(\''+c.id+'\',\''+date+'\')">Apuntarme a la espera</button>';
@@ -1897,21 +1934,112 @@ function botJoinWaitlist(classId, date){
   toast(s.name+' en lista de espera');
 }
 
+/* ---------- MATERIAS ---------- */
+let subjDraft = null;
+const SUBJ_COLORS = ['#14b8a6','#0ea5e9','#f59e0b','#10b981','#8b5cf6','#ec4899','#ef4444','#6366f1'];
+function renderSubjects(){
+  $('subjGrid').innerHTML = SUBJECTS.map(s=>{
+    const rooms = ROOMS.filter(r=>(r.subjectIds||[]).includes(s.id)).map(r=>r.name);
+    const n = STUDENTS.filter(x=>(x.subjects||[]).includes(s.id)).length;
+    return '<div class="card p-5">'+
+      '<div class="flex items-center gap-2.5 mb-2"><span class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-extrabold shrink-0" style="background:'+s.color+'">'+initials(s.name.replace(' · ',' '))+'</span>'+
+      '<div class="flex-1 min-w-0"><h3 class="font-bold text-slate-900 truncate">'+s.name+'</h3><div class="text-xs text-slate-400">'+s.teacher+'</div></div>'+
+      '<button class="text-xs text-violet-600 font-semibold hover:underline shrink-0" onclick="openSubjectForm(\''+s.id+'\')">Editar</button></div>'+
+      '<div class="mb-2.5">'+slotChips(s.slots)+'</div>'+
+      '<div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">'+
+      '<span><b class="text-slate-700">'+s.price+' €</b>/mes</span>'+
+      '<span><b class="text-slate-700">'+s.cap+'</b> plazas</span>'+
+      '<span><b class="text-slate-700">'+n+'</b> alumnos</span>'+
+      '<span>'+(rooms.length?rooms.join(', '):'sin aula')+'</span></div></div>';
+  }).join('') || '<p class="text-sm text-slate-400">Sin materias.</p>';
+}
+function openSubjectForm(editId){
+  attRerender = null;
+  const s = editId ? subj(editId) : null;
+  subjDraft = s ? { id:s.id, name:s.name, price:s.price, cap:s.cap, color:s.color, teacher:s.teacher, slots:s.slots.map(x=>({day:x.day,start:x.start,end:x.end})) }
+                : { id:null, name:'', price:60, cap:8, color:SUBJ_COLORS[SUBJECTS.length%SUBJ_COLORS.length], teacher:'', slots:[] };
+  renderSubjectForm();
+  openDrawer();
+}
+function subjSyncDraft(){
+  if($('sjName')) subjDraft.name = $('sjName').value;
+  if($('sjPrice')) subjDraft.price = $('sjPrice').value;
+  if($('sjCap')) subjDraft.cap = $('sjCap').value;
+  if($('sjTeacher')) subjDraft.teacher = $('sjTeacher').value;
+}
+function renderSubjectForm(){
+  const d = subjDraft;
+  const teachers = [...new Set([...USERS.filter(u=>u.role==='teacher'&&u.teacher).map(u=>u.teacher), ...SUBJECTS.map(x=>x.teacher)])];
+  if(d.teacher && !teachers.includes(d.teacher)) teachers.push(d.teacher);
+  $('drawerTitle').textContent = d.id ? 'Editar materia' : 'Nueva materia';
+  $('drawerBody').innerHTML =
+    '<label class="text-xs font-semibold text-slate-500">NOMBRE</label>'+
+    '<input id="sjName" value="'+String(d.name).replace(/"/g,'&quot;')+'" placeholder="Ej. Inglés · ESO" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
+    '<div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-semibold text-slate-500">PRECIO €/MES</label>'+
+    '<input id="sjPrice" type="number" min="0" value="'+d.price+'" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white"></div>'+
+    '<div><label class="text-xs font-semibold text-slate-500">PLAZAS</label>'+
+    '<input id="sjCap" type="number" min="1" value="'+d.cap+'" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white"></div></div>'+
+    '<label class="text-xs font-semibold text-slate-500">PROFESOR</label>'+
+    '<select id="sjTeacher" class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 mt-1 mb-3 bg-white">'+
+    teachers.map(t=>'<option'+(d.teacher===t?' selected':'')+'>'+t+'</option>').join('')+'</select>'+
+    '<label class="text-xs font-semibold text-slate-500">COLOR</label><div class="flex gap-2 mt-2 mb-4">'+
+    SUBJ_COLORS.map(c=>'<button onclick="subjSyncDraft();subjDraft.color=\''+c+'\';renderSubjectForm()" class="w-8 h-8 rounded-full shrink-0 '+(d.color===c?'ring-2 ring-offset-2 ring-slate-400':'ring-1 ring-slate-200')+'" style="background:'+c+'"></button>').join('')+'</div>'+
+    '<label class="text-xs font-semibold text-slate-500">HORARIO</label>'+
+    '<div class="space-y-2 mt-1 mb-4">'+[1,2,3,4,5].map(dn=>{
+      const sl = d.slots.find(x=>x.day===dn);
+      return '<div class="flex items-center gap-2"><button onclick="subjToggleDay('+dn+')" class="chip !py-1.5 font-bold shrink-0" style="width:52px;justify-content:center;'+(sl?'background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff':'background:#f1f5f9;color:#94a3b8')+'">'+DAYN[dn]+'</button>'+
+      (sl?'<input type="time" value="'+sl.start+'" onchange="subjSlotTime('+dn+',\'start\',this.value)" class="text-sm border border-slate-200 rounded-lg px-2 py-1.5 bg-white"><span class="text-slate-400">–</span><input type="time" value="'+sl.end+'" onchange="subjSlotTime('+dn+',\'end\',this.value)" class="text-sm border border-slate-200 rounded-lg px-2 py-1.5 bg-white">':'<span class="text-xs text-slate-300 italic">sin clase</span>')+'</div>';
+    }).join('')+'</div>'+
+    '<button class="btn btn-primary w-full justify-center !py-3" onclick="saveSubject()">Guardar materia</button>'+
+    (d.id?'<button class="text-xs text-rose-400 hover:underline mt-4" onclick="deleteSubject(\''+d.id+'\')">Eliminar materia</button>':'');
+}
+function subjToggleDay(dn){
+  subjSyncDraft();
+  const i = subjDraft.slots.findIndex(x=>x.day===dn);
+  if(i>=0) subjDraft.slots.splice(i,1); else subjDraft.slots.push({day:dn, start:'17:00', end:'18:00'});
+  renderSubjectForm();
+}
+function subjSlotTime(dn, k, v){ const sl = subjDraft.slots.find(x=>x.day===dn); if(sl) sl[k]=v; }
+function saveSubject(){
+  subjSyncDraft();
+  const d = subjDraft;
+  const name = String(d.name).trim();
+  if(!name){ toast('La materia necesita un nombre.', false); return; }
+  if(!d.slots.length){ toast('Elige al menos un día de clase.', false); return; }
+  const data = { name, price:parseInt(d.price)||0, cap:parseInt(d.cap)||8, color:d.color, teacher:d.teacher, slots:d.slots.slice().sort((a,b)=>a.day-b.day) };
+  if(d.id){ Object.assign(subj(d.id), data); toast('Materia actualizada.'); }
+  else { SUBJECTS.push(Object.assign({ id:'m'+Date.now() }, data)); toast('Materia creada.'); }
+  rebuildClasses();
+  closeDrawer(); renderSubjects();
+}
+function deleteSubject(id){
+  const s = subj(id);
+  if(STUDENTS.some(x=>(x.subjects||[]).includes(id))){ toast('No se puede eliminar: tiene alumnos matriculados.', false); return; }
+  if(!confirm('¿Eliminar la materia «'+s.name+'»?')) return;
+  SUBJECTS = SUBJECTS.filter(x=>x.id!==id);
+  ROOMS.forEach(r=>{ r.subjectIds = (r.subjectIds||[]).filter(x=>x!==id); });
+  rebuildClasses();
+  closeDrawer(); renderSubjects();
+  toast('Materia eliminada.');
+}
+
 /* ---------- MATRÍCULAS ---------- */
 function renderMatriculas(){
-  $('mGroup').innerHTML = Object.entries(GROUPS).map(([id,g])=>'<option value="'+id+'">'+g.name+' · '+g.price+' €/mes</option>').join('');
+  $('mSubjects').innerHTML = SUBJECTS.map(s=>'<label class="flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-violet-300 bg-white"><input type="checkbox" class="mSubj" value="'+s.id+'"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+s.color+'"></span><span class="text-sm font-semibold text-slate-700 flex-1">'+s.name+'</span><span class="text-xs text-slate-400">'+s.price+' €/mes · '+s.teacher+'</span></label>').join('');
 }
+
 function submitMatricula(){
-  const name=$('mName').value.trim(), tutor=$('mTutor').value.trim(), phone=$('mPhone').value.replace(/\D/g,''), gid=$('mGroup').value;
+  const name=$('mName').value.trim(), tutor=$('mTutor').value.trim(), phone=$('mPhone').value.replace(/\D/g,'');
+  const sids = [...document.querySelectorAll('.mSubj:checked')].map(x=>x.value);
   if(!name||!tutor||phone.length<9){ toast('Completa nombre, tutor y un móvil válido.', false); return; }
+  if(!sids.length){ toast('Elige al menos una materia.', false); return; }
   if(!$('mConsent').checked){ toast('Falta el consentimiento RGPD.', false); return; }
-  const classId = CLASSES.find(c=>c.group===gid).id;
   const id = 's'+Date.now();
-  STUDENTS.push({ id, name, tutor, rel:$('mRel').value, phone, cls:classId, notes:$('mNotes').value.trim() });
-  const base = GROUPS[gid].price;
+  STUDENTS.push({ id, name, tutor, rel:$('mRel').value, phone, subjects:sids, birth:null, photo:null, notes:$('mNotes').value.trim() });
+  const base = sids.map(subj).filter(Boolean).reduce((a,x)=>a+x.price,0);
   RECEIPTS.push({ id:'r'+id, studentId:id, month:'2026-10', base, extras:0, total:base, status:'pending', remindedAt:null });
   CREDITS[id]=0;
-  toast('Matrícula creada: '+name+' ya está en '+GROUPS[gid].name+', con su recibo.');
+  toast('Matrícula creada: '+name+' ya está en '+sids.map(x=>subj(x).name).join(' y ')+', con su recibo.');
   $('mName').value=''; $('mTutor').value=''; $('mPhone').value=''; $('mNotes').value='';
   go('ficha', id);
 }
@@ -1919,7 +2047,7 @@ function submitMatricula(){
 /* ---------- AVISOS ---------- */
 let avSel = new Set();
 function renderAvisos(){
-  avSel = new Set(Object.keys(GROUPS));
+  avSel = new Set(SUBJECTS.map(x=>x.id));
   drawAvGroups();
   $('avText').oninput = ()=>{ $('avPreview').textContent = $('avText').value || 'Escribe el mensaje…'; updAvCount(); };
   $('avPreview').textContent='Escribe el mensaje…';
@@ -1927,13 +2055,13 @@ function renderAvisos(){
   updAvCount();
 }
 function drawAvGroups(){
-  $('avGroups').innerHTML = Object.entries(GROUPS).map(([id,g])=>{
+  $('avGroups').innerHTML = SUBJECTS.map(g=>{ const id = g.id;
     const on = avSel.has(id);
     return '<button onclick="avToggle(\''+id+'\')" class="btn !py-2 '+(on?'btn-primary':'btn-ghost')+'"><span class="w-2 h-2 rounded-full" style="background:'+g.color+'"></span> '+g.name+'</button>';
   }).join('');
 }
 function avToggle(id){ if(avSel.has(id)) avSel.delete(id); else avSel.add(id); drawAvGroups(); updAvCount(); }
-function avTargets(){ return STUDENTS.filter(s=>avSel.has(cls(s.cls).group)); }
+function avTargets(){ return STUDENTS.filter(s=>(s.subjects||[]).some(id=>avSel.has(id))); }
 function updAvCount(){ const n=avTargets().length; $('avCount').textContent = n?('Llegará a '+n+' familias'):'Selecciona al menos un grupo'; }
 function sendAviso(){
   const t = $('avText').value.trim();
